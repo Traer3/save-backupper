@@ -1,10 +1,16 @@
-
-
 function App(): React.JSX.Element {
-
   return (
     <>
-      <h1>APP </h1>
+      <div
+        style={{
+          backgroundColor: '#036e7e',
+          width: '100vw',
+        height:'100vh',
+        color:'#ffff',
+
+      }}>
+          <h1>Test back</h1>
+      </div>
       
     </>
   )
