@@ -1,26 +1,68 @@
 /* eslint-disable prettier/prettier */
+import settingsIcon from '../../../../resources/settingsIcon.png'
+import addCircleIcon from '../../../../resources/addCircleIcon.png'
+import archiveIcon from '../../../../resources/archiveIcon.png'
+import cancelIcon from '../../../../resources/cancelIcon.png'
+import closeIcon from '../../../../resources/closeIcon.png'
+import emptyTrashIcon from '../../../../resources/emptyTrashIcon.png'
+import fullTrashIcon from '../../../../resources/fullTrashIcon.png'
+import googleIcon from '../../../../resources/googleIcon.png'
+import mainIcon from '../../../../resources/mainIcon.png'
+import saveIcon from '../../../../resources/saveIcon.png'
+import startIcon from '../../../../resources/startIcon.png'
+import terminalIcon from '../../../../resources/terminalIcon.png'
+import toggleOffIcon from '../../../../resources/toggleOffIcon.png'
+import toggleOnIcon from '../../../../resources/toggleOnIcon.png'
+import DefaultIcon from '../../../../resources/defaultIcon.png'
+
 interface ButtonFormProps {
-  size: number
-  buttonName: string
-  onClick: () => void
+  size?: number
+  iconName?: string
+  onClick?: () => void
 }
 
-function ButtonForm({ size, buttonName, onClick }: ButtonFormProps): React.JSX.Element {
+const icons = {
+  settings: settingsIcon,
+  addCircle: addCircleIcon,
+  archive: archiveIcon,
+  cancel: cancelIcon,
+  close: closeIcon,
+  emptyTrash: emptyTrashIcon,
+  fullTrash: fullTrashIcon,
+  google: googleIcon,
+  mainLogo: mainIcon,
+  save: saveIcon,
+  start: startIcon,
+  terminal: terminalIcon,
+  toggleOff: toggleOffIcon,
+  toggleOn: toggleOnIcon,
+  default: DefaultIcon
+}
+
+function ButtonForm({ size, onClick, iconName }: ButtonFormProps): React.JSX.Element {
   return (
     <button
       style={{
         height: size,
         width: size,
         backgroundColor: '#4C7DC0',
-        borderStyle:'solid',
-        borderColor:'#97DEBF',
+        borderStyle: 'solid',
+        borderColor: '#97DEBF',
         borderWidth: 1,
-        borderRadius: 5,
-        cursor: 'pointer'
+        borderRadius: 3,
+        cursor: 'pointer',
+        padding: 0
       }}
       onClick={onClick}
     >
-      {buttonName}
+      <img
+        src={icons[iconName] || icons.default}
+        style={{
+          height: 'calc(100% - 10%)',
+          width: 'calc(100% - 10%)',
+          padding: 0
+        }}
+      />
     </button>
   )
 }
