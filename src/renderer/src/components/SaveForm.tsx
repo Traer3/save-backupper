@@ -17,11 +17,12 @@ const SaveForm = ({ name, iconName, children, onClick }: SaveFormProps): React.J
         borderWidth: 0,
         borderRadius: 1,
         height: '10%',
+        //minHeight: '9vh',
         padding: 5,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
-        gap: 5
+        gap: 5 
       }}
     >
       <div
@@ -35,7 +36,7 @@ const SaveForm = ({ name, iconName, children, onClick }: SaveFormProps): React.J
       <text
         style={{
           padding: 5,
-          border: '1px solid red',
+          //border: '1px solid red',
           width: '100%',
           height: '100%',
           textAlign: 'start',

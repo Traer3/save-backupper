@@ -48,7 +48,8 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 5,
     display: 'flex',
     flexDirection: 'column',
-    gap: 5
+    gap: 5,
+    marginTop:-2
   },
   textStyle: {
     padding: 5,
