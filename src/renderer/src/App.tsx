@@ -25,12 +25,12 @@ function App(): React.JSX.Element {
       <div
         className="non-draggable"
         style={{
-          height:'100%',
+          height: '100%',
           padding: 10,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          gap: 10,
+          gap: 10
           //border: '1px solid red'
         }}
       >
@@ -43,7 +43,7 @@ function App(): React.JSX.Element {
         </ButtonHolder>
 
         <SaveListForm>
-          <SaveForm name='test'/>
+          <SaveForm name="test" />
         </SaveListForm>
       </div>
     </div>

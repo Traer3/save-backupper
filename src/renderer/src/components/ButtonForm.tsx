@@ -15,9 +15,9 @@ import toggleOffIcon from '../../../../resources/toggleOffIcon.png'
 import toggleOnIcon from '../../../../resources/toggleOnIcon.png'
 import DefaultIcon from '../../../../resources/defaultIcon.png'
 
-interface ButtonFormProps {
-  size?: number
-  iconName?: string
+type ButtonFormProps = {
+  size?: string | number;
+  iconName?: string ;
   onClick?: () => void
 }
 
@@ -40,6 +40,7 @@ const icons = {
 }
 
 function ButtonForm({ size, onClick, iconName }: ButtonFormProps): React.JSX.Element {
+  const IconName = iconName ? iconName :"default";
   return (
     <button
       style={{
@@ -56,7 +57,7 @@ function ButtonForm({ size, onClick, iconName }: ButtonFormProps): React.JSX.Ele
       onClick={onClick}
     >
       <img
-        src={icons[iconName] || icons.default}
+        src={icons[IconName] || icons.default}
         style={{
           height: 'calc(100% - 10%)',
           width: 'calc(100% - 10%)',
