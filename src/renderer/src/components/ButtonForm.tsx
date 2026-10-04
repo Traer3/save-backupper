@@ -13,6 +13,7 @@ import startIcon from '../../../../resources/startIcon.png'
 import terminalIcon from '../../../../resources/terminalIcon.png'
 import toggleOffIcon from '../../../../resources/toggleOffIcon.png'
 import toggleOnIcon from '../../../../resources/toggleOnIcon.png'
+import folderIcon from '../../../../resources/folderIcon.png'
 import DefaultIcon from '../../../../resources/defaultIcon.png'
 
 type ButtonFormProps = {
@@ -36,6 +37,7 @@ const icons = {
   terminal: terminalIcon,
   toggleOff: toggleOffIcon,
   toggleOn: toggleOnIcon,
+  folder: folderIcon,
   default: DefaultIcon
 }
 

@@ -19,7 +19,7 @@ const SaveListForm = ({ children }: SaveListFormProps): React.JSX.Element => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'stretch',
-        gap: 10
+        //gap: 10
       }}
     >
       {children}

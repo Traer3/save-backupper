@@ -16,7 +16,7 @@ function ButtonHolder({ children }: ButtonHolderProps): React.JSX.Element {
         borderWidth: 1,
         borderRadius: 3,
         width: '100%',
-        height: '10%',
+        height: '100%',
         backgroundColor: '#4C7DC0',
         padding: 5
       }}

@@ -1,12 +1,13 @@
 import ButtonForm from './components/ButtonForm'
 import ButtonHolder from './components/ButtonHolder'
-import SaveForm from './components/SaveForm'
 import SaveListForm from './components/SaveListForm'
+import SaveFile from './components/SaveFile'
 
 function App(): React.JSX.Element {
   const buttonClicking = (showTest: string): void => {
     console.log('show: ', showTest)
   }
+
   return (
     <div style={{ width: '100vw', height: '100vh', backgroundColor: '#2E346E' }}>
       <div
@@ -34,16 +35,27 @@ function App(): React.JSX.Element {
           //border: '1px solid red'
         }}
       >
-        <ButtonHolder>
-          <ButtonForm size={40} iconName="start" onClick={() => buttonClicking('test')} />
-          <ButtonForm size={40} iconName="terminal" onClick={() => buttonClicking('test')} />
-          <ButtonForm size={40} iconName="addCircle" onClick={() => buttonClicking('test')} />
-          <ButtonForm size={40} iconName="archive" onClick={() => buttonClicking('test')} />
-          <ButtonForm size={40} iconName="settings" onClick={() => buttonClicking('test')} />
-        </ButtonHolder>
+        <div>
+          <ButtonHolder>
+            <ButtonForm size={40} iconName="start" onClick={() => buttonClicking('test')} />
+            <ButtonForm size={40} iconName="terminal" onClick={() => buttonClicking('test')} />
+            <ButtonForm size={40} iconName="addCircle" onClick={() => buttonClicking('test')} />
+            <ButtonForm size={40} iconName="archive" onClick={() => buttonClicking('test')} />
+            <ButtonForm size={40} iconName="settings" onClick={() => buttonClicking('test')} />
+          </ButtonHolder>
+        </div>
 
         <SaveListForm>
-          <SaveForm name="test" />
+          <SaveFile
+            name="test"
+            savePath="C:\Users\traer\AppData\Roaming\DarkSoulsII\011000010a3889c9"
+            lastBackup="01.10.2026"
+          />
+          <SaveFile
+            name="test"
+            savePath="C:\Users\traer\AppData\Roaming\DarkSoulsII\011000010a3889c9"
+            lastBackup="01.10.2026"
+          />
         </SaveListForm>
       </div>
     </div>
@@ -51,32 +63,3 @@ function App(): React.JSX.Element {
 }
 
 export default App
-
-/*
-return (
-    <>
-      <div
-        className="draggable"
-        style={{
-          backgroundColor: '#2E346E',
-          width: '100%',
-          height: 'calc(100vh - 30px)',
-          marginTop: 30,
-          color: '#ffff',
-          overflow: 'hidden',
-          padding: 10,
-          alignItems: 'center'
-        }}
-      >
-        <ButtonHolder>
-          <ButtonForm size={40} iconName="start" onClick={() => buttonClicking('test')} />
-          <ButtonForm size={40} iconName="terminal" onClick={() => buttonClicking('test')} />
-          <ButtonForm size={40} iconName="addCircle" onClick={() => buttonClicking('test')} />
-          <ButtonForm size={40} iconName="archive" onClick={() => buttonClicking('test')} />
-          <ButtonForm size={40} iconName="settings" onClick={() => buttonClicking('test')} />
-        </ButtonHolder>
-      </div>
-    </>
-  )
-}
-*/

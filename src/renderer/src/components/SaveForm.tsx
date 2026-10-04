@@ -4,9 +4,9 @@ interface SaveFormProps {
   name?: string
   iconName?: string
   children?: React.ReactNode
+  onClick?: () => void
 }
-
-const SaveForm = ({ name, iconName, children }: SaveFormProps): React.JSX.Element => {
+const SaveForm = ({ name, iconName, children, onClick }: SaveFormProps): React.JSX.Element => {
   return (
     <li
       title={name}
@@ -14,8 +14,8 @@ const SaveForm = ({ name, iconName, children }: SaveFormProps): React.JSX.Elemen
         backgroundColor: '#2E346E',
         borderStyle: 'solid',
         borderColor: '#4C7DC0',
-        borderWidth: 1,
-        borderRadius: 3,
+        borderWidth: 0,
+        borderRadius: 1,
         height: '10%',
         padding: 5,
         display: 'flex',
@@ -30,7 +30,7 @@ const SaveForm = ({ name, iconName, children }: SaveFormProps): React.JSX.Elemen
           width: '20%'
         }}
       >
-        <ButtonForm size={'100%'} iconName={iconName} />
+        <ButtonForm size={'100%'} iconName={iconName} onClick={onClick} />
       </div>
       <text
         style={{
