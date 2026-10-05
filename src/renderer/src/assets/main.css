@@ -26,3 +26,13 @@ html, body, #root{
 .non-draggable{
     -webkit-app-region: no-drag
 }
+
+input:disabled::placeholder{
+    color: #EBF8E7;
+    opacity: 1;
+}
+
+input::placeholder {
+    color: #ebf8e78c;
+    opacity: 1;
+}

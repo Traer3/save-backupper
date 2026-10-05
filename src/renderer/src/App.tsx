@@ -2,10 +2,29 @@ import ButtonForm from './components/ButtonForm'
 import ButtonHolder from './components/ButtonHolder'
 import SaveListForm from './components/SaveListForm'
 import SaveFile from './components/SaveFile'
+import { useState } from 'react'
+import NewBackup from './components/NewBackup'
+import Settings from './components/Settings'
+import AuthorizationForm from './components/AuthorizationForm'
 
 function App(): React.JSX.Element {
+  const [authorized, setAuthorized] = useState(false)
+  const [newBackup, setNetBackup] = useState(false)
+  const [enableSettings, setEnableSettings] = useState(false)
   const buttonClicking = (showTest: string): void => {
     console.log('show: ', showTest)
+  }
+
+  const onNewBackup = (): void => {
+    setNetBackup(!newBackup)
+  }
+
+  const toggleSettings = (): void => {
+    setEnableSettings(!enableSettings)
+  }
+
+  const toggleLogOut = (): void => {
+    setAuthorized(false)
   }
 
   const testData = [
@@ -31,51 +50,57 @@ function App(): React.JSX.Element {
   ]
   return (
     <div style={{ width: '100vw', height: '100vh', backgroundColor: '#2E346E' }}>
-      <div
-        className="draggable"
-        style={{
-          width: '100%',
-          height: '30px',
-          paddingRight: '140px',
-          display: 'flex',
-          alignItems: 'center',
-          paddingLeft: '10px'
-        }}
-      >
+      <div className="draggable" style={styles.aplicationName}>
         <span style={{ fontSize: '12px', color: 'red' }}>Zalupa</span>
       </div>
-      <div
-        className="non-draggable"
-        style={{
-          height: '100%',
-          padding: 10,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          gap: 10
-          //border: '1px solid red'
-        }}
-      >
-        <div>
-          <ButtonHolder>
-            <ButtonForm size={35} iconName="start" onClick={() => buttonClicking('test')} />
-            <ButtonForm size={35} iconName="terminal" onClick={() => buttonClicking('test')} />
-            <ButtonForm size={35} iconName="addCircle" onClick={() => buttonClicking('test')} />
-            <ButtonForm size={35} iconName="archive" onClick={() => buttonClicking('test')} />
-            <ButtonForm size={35} iconName="settings" onClick={() => buttonClicking('test')} />
-          </ButtonHolder>
+      {authorized ? (
+        <div className="non-draggable" style={styles.mainBody}>
+          <div>
+            <ButtonHolder>
+              <ButtonForm size={35} iconName="start" onClick={toggleLogOut} />
+              <ButtonForm size={35} iconName="terminal" onClick={() => buttonClicking('test')} />
+              <ButtonForm size={35} iconName="addCircle" onClick={onNewBackup} />
+              <ButtonForm size={35} iconName="archive" onClick={() => buttonClicking('test')} />
+              <ButtonForm size={35} iconName="settings" onClick={toggleSettings} />
+            </ButtonHolder>
+          </div>
+          {enableSettings && <Settings />}
+          {newBackup ? (
+            <NewBackup />
+          ) : (
+            <SaveListForm>
+              {testData.map((obj) => (
+                <div key={obj.id}>
+                  <SaveFile name={obj.name} savePath={obj.savePath} lastBackup={obj.lastBackup} />
+                </div>
+              ))}
+            </SaveListForm>
+          )}
         </div>
-
-        <SaveListForm>
-          {testData.map((obj) => (
-            <div key={obj.id}>
-              <SaveFile name={obj.name} savePath={obj.savePath} lastBackup={obj.lastBackup} />
-            </div>
-          ))}
-        </SaveListForm>
-      </div>
+      ) : (
+        <AuthorizationForm setAuth={setAuthorized} />
+      )}
     </div>
   )
 }
 
 export default App
+
+const styles: Record<string, React.CSSProperties> = {
+  aplicationName: {
+    width: '100%',
+    height: '30px',
+    paddingRight: '140px',
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: '10px'
+  },
+  mainBody: {
+    height: '100%',
+    padding: 10,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: 10
+  }
+}

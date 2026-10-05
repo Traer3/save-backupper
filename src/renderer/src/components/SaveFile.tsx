@@ -15,7 +15,7 @@ const SaveFile = ({ name, savePath, lastBackup }: SaveFileProps): React.JSX.Elem
   }
   return (
     <>
-      <SaveForm name={name} onClick={showExtraInfo} />
+      <SaveForm disableEdit={true} name={name} onClick={showExtraInfo} />
       {showExtra && <SaveInfoForm savePath={savePath} lastBackup={lastBackup} />}
     </>
   )

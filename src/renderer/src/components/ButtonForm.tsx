@@ -43,7 +43,6 @@ const icons = {
 
 function ButtonForm({ size, onClick, iconName }: ButtonFormProps): React.JSX.Element {
   const IconName = iconName ? iconName :"default";
-  console.log(size)
   return (
     <button
       style={{

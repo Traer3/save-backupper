@@ -13,7 +13,7 @@ const SaveListForm = ({ children }: SaveListFormProps): React.JSX.Element => {
         listStyle: 'none',
         padding: 5,
         margin: 0,
-        backgroundColor: '#4C7DC0', //97DEBF
+        backgroundColor: '#4c7cc0a0', //97DEBF
         borderStyle: 'solid',
         borderColor: '#97DEBF', //4C7DC0
         borderWidth: 1,

@@ -1,5 +1,6 @@
 import ButtonForm from './ButtonForm'
 import ButtonHolder from './ButtonHolder'
+import SaveTextInfoForm from './SaveTextInfoForm'
 
 type SaveInfoFormProps = {
   savePath?: string
@@ -9,20 +10,7 @@ type SaveInfoFormProps = {
 const SaveInfoForm = ({ savePath, lastBackup }: SaveInfoFormProps): React.JSX.Element => {
   return (
     <div style={styles.mainBody}>
-      <div
-        title={savePath}
-        style={{
-          width: '100%',
-          display: 'flex',
-          gap: 5
-        }}
-      >
-        <text style={styles.textStyle}>{savePath}</text>
-        <ButtonForm size={25} iconName="folder" />
-      </div>
-      <text style={{ ...styles.textStyle, alignItems: 'center', display: 'flex' }}>
-        {lastBackup}
-      </text>
+      <SaveTextInfoForm disableEdit={true} savePath={savePath} lastBackup={lastBackup} />
       <div>
         <ButtonHolder>
           <ButtonForm size={30} iconName="start" />
@@ -38,7 +26,7 @@ export default SaveInfoForm
 
 const styles: Record<string, React.CSSProperties> = {
   mainBody: {
-    backgroundColor: '#2E346E',
+    backgroundColor: '#2e346ebc',
     borderStyle: 'solid',
     borderColor: '#4C7DC0',
     borderWidth: 0,
@@ -48,22 +36,6 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 5,
     display: 'flex',
     flexDirection: 'column',
-    gap: 5,
-    marginTop: -2
-  },
-  textStyle: {
-    padding: 5,
-    borderStyle: 'solid',
-    borderColor: '#97DEBF', //4C7DC0
-    borderWidth: 1,
-    borderRadius: 2,
-    width: '100%',
-    textAlign: 'start',
-    fontSize: 12,
-    fontWeight: 600,
-    color: '#EBF8E7',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    userSelect: 'text'
+    gap: 5
   }
 }
