@@ -43,13 +43,13 @@ const styles: Record<string, React.CSSProperties> = {
     borderColor: '#4C7DC0',
     borderWidth: 0,
     borderRadius: 1,
-    height: '20%',
+    //height: '20%',
     width: '100%',
     padding: 5,
     display: 'flex',
     flexDirection: 'column',
     gap: 5,
-    marginTop:-2
+    marginTop: -2
   },
   textStyle: {
     padding: 5,

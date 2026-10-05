@@ -16,22 +16,24 @@ const SaveForm = ({ name, iconName, children, onClick }: SaveFormProps): React.J
         borderColor: '#4C7DC0',
         borderWidth: 0,
         borderRadius: 1,
-        height: '10%',
+        //height: '10%',
         //minHeight: '9vh',
         padding: 5,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
-        gap: 5 
+        gap: 5
       }}
     >
       <div
         style={{
           height: '100%',
-          width: '20%'
+          width: '20%',
+          display: 'flex',
+          alignItems: 'center'
         }}
       >
-        <ButtonForm size={'100%'} iconName={iconName} onClick={onClick} />
+        <ButtonForm size={50} iconName={iconName} onClick={onClick} />
       </div>
       <text
         style={{

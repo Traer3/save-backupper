@@ -6,7 +6,9 @@ const SaveListForm = ({ children }: SaveListFormProps): React.JSX.Element => {
   return (
     <ul
       style={{
-        height: '90%',
+        //height: '90%',
+        height: `90vh`,
+        //width: `clamp(24px, 15vw, ${size}px)`,
         width: '100%',
         listStyle: 'none',
         padding: 5,
@@ -20,8 +22,7 @@ const SaveListForm = ({ children }: SaveListFormProps): React.JSX.Element => {
         flexDirection: 'column',
         alignItems: 'stretch',
         gap: 2,
-        overflow:'scroll',
-       
+        overflow: 'scroll'
       }}
     >
       {children}

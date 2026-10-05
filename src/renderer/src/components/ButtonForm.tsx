@@ -17,7 +17,7 @@ import folderIcon from '../../../../resources/folderIcon.png'
 import DefaultIcon from '../../../../resources/defaultIcon.png'
 
 type ButtonFormProps = {
-  size?: string | number;
+  size?: number;
   iconName?: string ;
   onClick?: () => void
 }
@@ -43,26 +43,31 @@ const icons = {
 
 function ButtonForm({ size, onClick, iconName }: ButtonFormProps): React.JSX.Element {
   const IconName = iconName ? iconName :"default";
+  console.log(size)
   return (
     <button
       style={{
-        height: size,
-        width: size,
+        width:`clamp(24px, 15vw, ${size}px)`, //height: size,
+        height:`clamp(24px, 15vw, ${size}px)`,//width: size,
+        flexShrink:0,
+        objectFit:'contain',
         backgroundColor: '#4C7DC0',
         borderStyle: 'solid',
         borderColor: '#97DEBF',
         borderWidth: 1,
         borderRadius: 3,
         cursor: 'pointer',
-        padding: 0
+        padding: 0,
       }}
       onClick={onClick}
     >
       <img
         src={icons[IconName] || icons.default}
         style={{
-          height: 'calc(100% - 10%)',
-          width: 'calc(100% - 10%)',
+          height: `clamp(24px, 15vw, ${size}px)`,
+          width: `clamp(24px, 15vw, ${size}px)`,
+          flexShrink:0,
+          objectFit:'contain',
           padding: 0
         }}
       />
