@@ -4,7 +4,6 @@ import { toolsService } from '../services/toolsService'
 export function toolsIps(): void {
   ipcMain.handle('read-json', async (_, fileName: string) => {
     const FileInfo = await toolsService.readMyFile(fileName)
-    console.log('FileInfo: ', FileInfo)
     return FileInfo
   })
 }
