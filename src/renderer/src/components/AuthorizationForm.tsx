@@ -9,13 +9,22 @@ interface AuthorizationFormProps {
 }
 
 const AuthorizationForm = ({ setAuth }: AuthorizationFormProps): React.JSX.Element => {
+  // useEffect(() => {
+  //   const loadData = async (): Promise<void> => {
+  //     const fileData = await window.api.readJson('config.json')
+  //     console.log('Data fileData: ', fileData)
+  //   }
+
+  //   loadData()
+  // }, [])
+
   useEffect(() => {
-    const loadData = async (): Promise<void> => {
-      const fileData = await window.api.readJson('config.json')
-      console.log('Data fileData: ', fileData)
+    const logIn = async (): Promise<void> => {
+      const answer = await window.api.tryLogin()
+      console.log(answer)
     }
 
-    loadData()
+    logIn()
   }, [])
 
   const toggleAuth = (): void => {

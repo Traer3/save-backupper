@@ -2,7 +2,8 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 const api = {
-  readJson: (fileName: string) => ipcRenderer.invoke('read-json', fileName)
+  readJson: (fileName: string) => ipcRenderer.invoke('read-json', fileName),
+  tryLogin: () => ipcRenderer.invoke('try-login')
 }
 
 if (process.contextIsolated) {
