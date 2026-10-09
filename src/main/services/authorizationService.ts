@@ -128,7 +128,16 @@ export class AuthorizationService {
     }
   }
 
-  private async checkToken(): Promise<OAuth2Client | null> {
+  async checkTokenHealth(): Promise<boolean> {
+    const tokenState = await this.checkToken()
+    if (tokenState) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  async checkToken(): Promise<OAuth2Client | null> {
     const tokenExists = await toolsService.exists(this.TOKEN_FILE)
     if (!tokenExists) return null
     const refreshToken = await this.getSavedRefreshToken()

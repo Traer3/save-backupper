@@ -23,10 +23,6 @@ function App(): React.JSX.Element {
     setEnableSettings(!enableSettings)
   }
 
-  const toggleLogOut = (): void => {
-    setAuthorized(false)
-  }
-
   const testData = [
     //C:\Users\traer\AppData\Roaming\DarkSoulsII\011000010a3889c9
     {
@@ -57,14 +53,16 @@ function App(): React.JSX.Element {
         <div className="non-draggable" style={styles.mainBody}>
           <div>
             <ButtonHolder>
-              <ButtonForm size={35} iconName="start" onClick={toggleLogOut} />
+              <ButtonForm size={35} iconName="start" />
               <ButtonForm size={35} iconName="terminal" onClick={() => buttonClicking('test')} />
               <ButtonForm size={35} iconName="addCircle" onClick={onNewBackup} />
               <ButtonForm size={35} iconName="archive" onClick={() => buttonClicking('test')} />
               <ButtonForm size={35} iconName="settings" onClick={toggleSettings} />
             </ButtonHolder>
           </div>
-          {enableSettings && <Settings />}
+          {enableSettings && (
+            <Settings setAuth={setAuthorized} setEnableSettings={setEnableSettings} />
+          )}
           {newBackup ? (
             <NewBackup />
           ) : (

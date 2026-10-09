@@ -1,16 +1,26 @@
 import TextButton from './TextButton'
 
-const Settings = (): React.JSX.Element => {
+interface SettingsProps {
+  setAuth: React.Dispatch<React.SetStateAction<boolean>>
+  setEnableSettings: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Settings = ({ setAuth, setEnableSettings }: SettingsProps): React.JSX.Element => {
   const deleteAllBackups = (): void => {
     console.log('Deleted')
   }
-  const deleteGoogleToken = (): void => {
-    console.log('deleteGoogleToken')
+  const logout = async (): Promise<void> => {
+    const answer = await window.api.logout()
+    if (answer) {
+      console.log('TokenDeleted')
+      setAuth(false)
+      setEnableSettings(false)
+    }
   }
   return (
     <div style={styles.mainBody}>
       <TextButton text="delete all current buckups" onClick={deleteAllBackups} />
-      <TextButton text="Exit google" onClick={deleteGoogleToken} />
+      <TextButton text="Exit google" onClick={logout} />
     </div>
   )
 }

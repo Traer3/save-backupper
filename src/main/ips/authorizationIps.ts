@@ -9,4 +9,8 @@ export function authorizationIps(): void {
   ipcMain.handle('logout', async () => {
     return await authorizationService.deleteToken()
   })
+
+  ipcMain.handle('checkToken', async () => {
+    return await authorizationService.checkTokenHealth()
+  })
 }

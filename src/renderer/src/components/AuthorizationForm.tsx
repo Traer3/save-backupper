@@ -1,4 +1,4 @@
-// import { useEffect } from 'react'
+import { useEffect } from 'react'
 import mainIcon from '../../../../resources/mainIcon.png'
 import ButtonForm from './ButtonForm'
 import ButtonHolder from './ButtonHolder'
@@ -9,20 +9,28 @@ interface AuthorizationFormProps {
 }
 
 const AuthorizationForm = ({ setAuth }: AuthorizationFormProps): React.JSX.Element => {
-  const toggleAuth = (): void => {
-    setAuth(true)
-    const isLoged = logIn()
-    console.log('isLoged: ', isLoged)
+  useEffect(() => {
+    const init = async (): Promise<void> => {
+      const isSuccess = await window.api.checkToken<boolean>()
+      setAuth(isSuccess)
+    }
+    init()
+  }, [setAuth])
+
+  const toggleAuth = async (): Promise<void> => {
+    const isLoged = await logIn()
+    if (isLoged) {
+      setAuth(true)
+    }
   }
 
-  const logIn = async (): Promise<void> => {
-    const answer = await window.api.tryLogin()
-    console.log(answer)
-  }
-  const logout = async (): Promise<void> => {
-    const answer = await window.api.logout()
-    if (answer) {
-      console.log('TokenDeleted')
+  const logIn = async (): Promise<boolean> => {
+    try {
+      const isSuccess = await window.api.tryLogin<boolean>()
+      return Boolean(isSuccess)
+    } catch (err) {
+      console.log(`Error in logIn: `, err)
+      return false
     }
   }
   return (
@@ -32,7 +40,7 @@ const AuthorizationForm = ({ setAuth }: AuthorizationFormProps): React.JSX.Eleme
       <div style={styles.buttonPosition}>
         <ButtonHolder backgroundColor="#4c7cc0a0">
           <ButtonForm size={50} iconName="google" onClick={toggleAuth} />
-          <ButtonForm size={50} iconName="archive" onClick={logout} />
+          <ButtonForm size={50} iconName="archive" />
         </ButtonHolder>
       </div>
     </div>

@@ -3,7 +3,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 const api = {
   tryLogin: () => ipcRenderer.invoke('try-login'),
-  logout: () => ipcRenderer.invoke('logout')
+  logout: () => ipcRenderer.invoke('logout'),
+  checkToken: () => ipcRenderer.invoke('checkToken')
 }
 
 if (process.contextIsolated) {
