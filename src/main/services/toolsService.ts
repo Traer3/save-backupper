@@ -1,16 +1,19 @@
 import { app } from 'electron'
-import { readFile, writeFile } from 'fs/promises'
+import { readFile, writeFile, access, rm } from 'fs/promises'
 import { join } from 'path'
 
 export class ToolsService {
-  // исправить эту дрочь , но возможность выбирать любую папку в корне проекта
   private getFilePath(fileName: string): string {
     return join(app.getPath('userData'), fileName)
   }
 
-  async readMyFile<T>(fileName: string): Promise<T | null> {
+  async readMyFile<T>(fileName: string, isToken: boolean = false): Promise<T | null> {
     try {
       const filePath = this.getFilePath(fileName)
+      if (isToken) {
+        const bufferData = await readFile(filePath)
+        return bufferData as T
+      }
       const fileData = await readFile(filePath, 'utf-8')
       return JSON.parse(fileData) as T
     } catch (err) {
@@ -19,9 +22,13 @@ export class ToolsService {
     }
   }
 
-  async writeFile(fileName: string, data: unknown): Promise<boolean> {
+  async writeFile(fileName: string, data: unknown, isToken: boolean = false): Promise<boolean> {
     try {
       const filePath = join(app.getPath('userData'), fileName)
+      if (isToken) {
+        await writeFile(filePath, data as Buffer)
+        return true
+      }
       const contetn = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
       await writeFile(filePath, contetn, 'utf-8')
       return true
@@ -30,32 +37,34 @@ export class ToolsService {
       return false
     }
   }
+
+  async exists(fileName: string, silent: boolean = true): Promise<boolean | null> {
+    try {
+      const filePath = join(app.getPath('userData'), fileName)
+      await access(filePath)
+      return true
+    } catch (err) {
+      if (typeof err === 'object' && err !== null && 'code' in err) {
+        if (!silent) {
+          console.log(`❌ Cant access file : ${fileName}\n${err}`)
+        }
+        return false
+      }
+      console.log(`Error checking existence of file ${fileName}`, err)
+      throw err
+    }
+  }
+
+  async deleteFile(fileName: string): Promise<boolean | null> {
+    try {
+      const filePath = join(app.getPath('userData'), fileName)
+      await rm(filePath, { recursive: true })
+      return true
+    } catch (err) {
+      console.log(`❌ Error deleting file : ${fileName}\n${err}`)
+      return null
+    }
+  }
 }
 
 export const toolsService = new ToolsService()
-
-/*
-exports.exists = async (path,silent = true) => {
-    try {
-        await fsPromises.access(path);
-        return true;
-    } catch (err) {
-        if(err.code === 'ENOENT'){
-            if(!silent){
-                console.log(`❌ Cant access file : ${path}\n${err.message}`)
-            }
-            return false;
-        }
-        console.log("Error checking existens of: ", path);
-        throw err;
-    }
-};
-exports.deleteFile = async (filePath) => {
-    try {
-        await fsPromises.rm(filePath, { recursive: true })
-        return true;
-    } catch (err) {
-        console.log(`❌ Error deleting file : ${filePath}\n${err}`)
-    }
-};
-*/

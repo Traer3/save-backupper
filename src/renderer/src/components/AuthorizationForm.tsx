@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 import mainIcon from '../../../../resources/mainIcon.png'
 import ButtonForm from './ButtonForm'
 import ButtonHolder from './ButtonHolder'
@@ -9,26 +9,21 @@ interface AuthorizationFormProps {
 }
 
 const AuthorizationForm = ({ setAuth }: AuthorizationFormProps): React.JSX.Element => {
-  // useEffect(() => {
-  //   const loadData = async (): Promise<void> => {
-  //     const fileData = await window.api.readJson('config.json')
-  //     console.log('Data fileData: ', fileData)
-  //   }
-
-  //   loadData()
-  // }, [])
-
-  useEffect(() => {
-    const logIn = async (): Promise<void> => {
-      const answer = await window.api.tryLogin()
-      console.log(answer)
-    }
-
-    logIn()
-  }, [])
-
   const toggleAuth = (): void => {
     setAuth(true)
+    const isLoged = logIn()
+    console.log('isLoged: ', isLoged)
+  }
+
+  const logIn = async (): Promise<void> => {
+    const answer = await window.api.tryLogin()
+    console.log(answer)
+  }
+  const logout = async (): Promise<void> => {
+    const answer = await window.api.logout()
+    if (answer) {
+      console.log('TokenDeleted')
+    }
   }
   return (
     <div style={styles.mainBody}>
@@ -37,7 +32,7 @@ const AuthorizationForm = ({ setAuth }: AuthorizationFormProps): React.JSX.Eleme
       <div style={styles.buttonPosition}>
         <ButtonHolder backgroundColor="#4c7cc0a0">
           <ButtonForm size={50} iconName="google" onClick={toggleAuth} />
-          <ButtonForm size={50} iconName="archive" />
+          <ButtonForm size={50} iconName="archive" onClick={logout} />
         </ButtonHolder>
       </div>
     </div>

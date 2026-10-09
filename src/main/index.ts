@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { toolsIps } from './ips/toolsIps'
+import { authorizationIps } from './ips/authorizationIps'
 
 function createWindow(): void {
   // Create the browser window.
@@ -52,7 +52,7 @@ app.whenReady().then(() => {
   })
   ipcMain.on('ping', () => console.log('pong'))
 
-  toolsIps()
+  authorizationIps()
 
   createWindow()
 
