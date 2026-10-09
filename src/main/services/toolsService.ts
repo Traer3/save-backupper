@@ -19,8 +19,9 @@ export class ToolsService {
     }
   }
 
-  async writeFile(filePath: string, data: unknown): Promise<boolean> {
+  async writeFile(fileName: string, data: unknown): Promise<boolean> {
     try {
+      const filePath = join(app.getPath('userData'), fileName)
       const contetn = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
       await writeFile(filePath, contetn, 'utf-8')
       return true
