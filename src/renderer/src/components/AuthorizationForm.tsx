@@ -33,6 +33,7 @@ const AuthorizationForm = ({ setAuth }: AuthorizationFormProps): React.JSX.Eleme
       return false
     }
   }
+
   return (
     <div style={styles.mainBody}>
       <img src={mainIcon} style={styles.logoStyle} />

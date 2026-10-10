@@ -23,6 +23,10 @@ function App(): React.JSX.Element {
     setEnableSettings(!enableSettings)
   }
 
+  const createFolder = async (): Promise<void> => {
+    await window.api.createFolder()
+  }
+
   const testData = [
     //C:\Users\traer\AppData\Roaming\DarkSoulsII\011000010a3889c9
     {
@@ -56,7 +60,7 @@ function App(): React.JSX.Element {
               <ButtonForm size={35} iconName="start" />
               <ButtonForm size={35} iconName="terminal" onClick={() => buttonClicking('test')} />
               <ButtonForm size={35} iconName="addCircle" onClick={onNewBackup} />
-              <ButtonForm size={35} iconName="archive" onClick={() => buttonClicking('test')} />
+              <ButtonForm size={35} iconName="archive" onClick={createFolder} />
               <ButtonForm size={35} iconName="settings" onClick={toggleSettings} />
             </ButtonHolder>
           </div>

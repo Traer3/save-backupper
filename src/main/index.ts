@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { authorizationIps } from './ips/authorizationIps'
+import { driverSeriviceIps } from './ips/driverSeriviceIps'
 
 function createWindow(): void {
   // Create the browser window.
@@ -53,6 +54,8 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   authorizationIps()
+
+  driverSeriviceIps()
 
   createWindow()
 

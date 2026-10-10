@@ -4,7 +4,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 const api = {
   tryLogin: () => ipcRenderer.invoke('try-login'),
   logout: () => ipcRenderer.invoke('logout'),
-  checkToken: () => ipcRenderer.invoke('checkToken')
+  checkToken: () => ipcRenderer.invoke('checkToken'),
+  createFolder: () => ipcRenderer.invoke('try-create-folder')
 }
 
 if (process.contextIsolated) {
