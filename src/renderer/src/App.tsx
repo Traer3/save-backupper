@@ -24,7 +24,10 @@ function App(): React.JSX.Element {
   }
 
   const createFolder = async (): Promise<void> => {
-    await window.api.createFolder()
+    //await window.api.createFolder()
+    //await window.api.uploadFile('test.txt')
+    //await window.api.deleteMainFolder()
+    await window.api.filesInMainFolder()
   }
 
   const testData = [

@@ -1,5 +1,7 @@
 import { google, drive_v3 } from 'googleapis'
 import { authorizationService } from './authorizationService'
+import { createReadStream } from 'fs'
+import { toolsService } from './toolsService'
 
 export class DriverService {
   private FOLDER_NAME = 'SaveBackupper'
@@ -51,6 +53,100 @@ export class DriverService {
     } catch (err) {
       console.error(`Error while creating foler in google disk\n`, err)
       return null
+    }
+  }
+
+  async uploadFileToFolder(
+    parentFolderId: string,
+    //filePath: string,
+    fileName: string
+  ): Promise<string | null> {
+    try {
+      const filePath = toolsService.getFilePath(fileName)
+      const drive = await this.getDriverClient()
+      if (!drive) return null
+
+      const fileMetadata = {
+        name: fileName,
+        parents: [parentFolderId]
+      }
+
+      const media = {
+        mimeType: 'application/octet-stream',
+        body: createReadStream(filePath) //filePath
+      }
+
+      const response = await drive.files.create({
+        requestBody: fileMetadata,
+        media: media,
+        fields: 'id, name'
+      })
+
+      console.log(`File ${fileName} successfully uploaded!`)
+      return response.data.id || null
+    } catch (err) {
+      console.error(`Error while working with ${fileName}\n`, err)
+      return null
+    }
+  }
+
+  async uploadToMainFolder(fileName: string): Promise<boolean> {
+    const folderId = await this.getOrCreateAppFolder()
+    if (!folderId) {
+      console.error(`Missing folder SaveBackupperI ID:`)
+      return false
+    }
+    const fileId = await this.uploadFileToFolder(folderId, fileName)
+    return fileId !== null
+  }
+
+  async deleteMainFolder(): Promise<boolean> {
+    try {
+      const folderId = await this.getOrCreateAppFolder()
+      if (!folderId) {
+        console.error(`Missing folder SaveBackupperI ID:`)
+        return false
+      }
+
+      const drive = await this.getDriverClient()
+      if (!drive) return false
+
+      await drive.files.update({
+        fileId: folderId,
+        requestBody: {
+          trashed: true
+        }
+      })
+      console.log(`Target moved to trash bin on Google disk`)
+      return true
+    } catch (err) {
+      console.error(`Error while moving target to trash bin\n`, err)
+      return false
+    }
+  }
+
+  async filesInMainFolder(): Promise<drive_v3.Schema$File[]> {
+    try {
+      const folderId = await this.getOrCreateAppFolder()
+      if (!folderId) {
+        console.error(`Missing folder SaveBackupperI ID:`)
+        return []
+      }
+
+      const drive = await this.getDriverClient()
+      if (!drive) return []
+
+      const response = await drive.files.list({
+        q: `'${folderId}' in parents and trashed = false`,
+        fields: 'files(id, name, mimeType, createdTime, size)',
+        orderBy: 'createdTime desc'
+      })
+
+      console.log('FIles: ', response.data.files)
+      return response.data.files || []
+    } catch (err) {
+      console.error(`Error while reading main folder:\n`, err)
+      return []
     }
   }
 }

@@ -3,7 +3,7 @@ import { readFile, writeFile, access, rm } from 'fs/promises'
 import { join } from 'path'
 
 export class ToolsService {
-  private getFilePath(fileName: string): string {
+  getFilePath(fileName: string): string {
     return join(app.getPath('userData'), fileName)
   }
 

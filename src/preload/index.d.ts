@@ -5,6 +5,9 @@ export interface CustomAPI {
   logout: <T = unknown>() => Promise<T>
   checkToken: <T = unknown>() => Promise<T>
   createFolder: <T = unknown>() => Promise<T>
+  uploadFile: <T = unknown>(fileName: string) => Promise<T>
+  deleteMainFolder: <T = unknown>() => Promise<T>
+  filesInMainFolder: <T = unknown>() => Promise<T>
 }
 
 declare global {
