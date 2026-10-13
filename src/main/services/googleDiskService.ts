@@ -149,6 +149,34 @@ export class DriverService {
       return []
     }
   }
+
+  async textFile(textInfo: string): Promise<boolean> {
+    const folderId = await this.getOrCreateAppFolder()
+    if (!folderId) {
+      console.error(`Missing folder SaveBackupperI ID:`)
+      return false
+    }
+
+    const drive = await this.getDriverClient()
+    if (!drive) return false
+
+    const fileMetadata = {
+      name: 'notes.txt',
+      parents: [folderId]
+    }
+
+    const media = {
+      mimeType: 'text/plain',
+      body: `${textInfo}`
+    }
+
+    await drive.files.create({
+      requestBody: fileMetadata,
+      media: media
+    })
+
+    return true
+  }
 }
 
 export const driverSerivice = new DriverService()

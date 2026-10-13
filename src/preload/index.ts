@@ -8,7 +8,8 @@ const api = {
   createFolder: () => ipcRenderer.invoke('try-create-folder'),
   uploadFile: (fileName: string) => ipcRenderer.invoke('uploadFile', fileName),
   deleteMainFolder: () => ipcRenderer.invoke('filesInMainFolder'),
-  filesInMainFolder: () => ipcRenderer.invoke('filesInMainFolder')
+  filesInMainFolder: () => ipcRenderer.invoke('filesInMainFolder'),
+  textFile: (textInfo: string) => ipcRenderer.invoke('textFile', textInfo)
 }
 
 if (process.contextIsolated) {

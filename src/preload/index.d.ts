@@ -8,6 +8,7 @@ export interface CustomAPI {
   uploadFile: <T = unknown>(fileName: string) => Promise<T>
   deleteMainFolder: <T = unknown>() => Promise<T>
   filesInMainFolder: <T = unknown>() => Promise<T>
+  textFile: <T = unknown>(textInfo: string) => Promise<T>
 }
 
 declare global {

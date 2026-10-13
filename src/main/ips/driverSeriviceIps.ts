@@ -17,4 +17,8 @@ export function driverSeriviceIps(): void {
   ipcMain.handle('filesInMainFolder', async () => {
     await driverSerivice.filesInMainFolder()
   })
+
+  ipcMain.handle('textFile', async (_, textInfo: string) => {
+    await driverSerivice.textFile(textInfo)
+  })
 }
