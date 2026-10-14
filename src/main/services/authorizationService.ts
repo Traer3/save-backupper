@@ -71,7 +71,7 @@ export class AuthorizationService {
             const authUrl = oAuth2Client.generateAuthUrl({
               access_type: 'offline',
               prompt: 'consent',
-              scope: ['https://www.googleapis.com/auth/drive.file']
+              scope: ['https://www.googleapis.com/auth/drive']
             })
             shell.openExternal(authUrl)
           }
@@ -151,7 +151,7 @@ export class AuthorizationService {
     try {
       const { credentials } = await oAuth2Client.refreshAccessToken()
       oAuth2Client.setCredentials(credentials)
-      console.log('Toking working')
+      //console.log('Toking working')
       return oAuth2Client
     } catch (err) {
       console.log(`Error in checkToken : ${err}`)

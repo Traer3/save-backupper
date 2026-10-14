@@ -1,10 +1,20 @@
 import { app } from 'electron'
-import { readFile, writeFile, access, rm } from 'fs/promises'
+import { readFile, writeFile, access, rm, readdir } from 'fs/promises'
 import { join } from 'path'
 
 export class ToolsService {
   getFilePath(fileName: string): string {
     return join(app.getPath('userData'), fileName)
+  }
+
+  async getFiles<T>(path: string): Promise<T | null> {
+    try {
+      const bufferData = await readdir(path)
+      return bufferData as T
+    } catch (err) {
+      console.log(`Error in tools service: \n${err}`)
+      return null
+    }
   }
 
   async readMyFile<T>(fileName: string, isToken: boolean = false): Promise<T | null> {

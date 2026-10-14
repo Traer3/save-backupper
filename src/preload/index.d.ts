@@ -9,6 +9,7 @@ export interface CustomAPI {
   deleteMainFolder: <T = unknown>() => Promise<T>
   filesInMainFolder: <T = unknown>() => Promise<T>
   textFile: <T = unknown>(textInfo: string) => Promise<T>
+  getFolderInfo: <T = unknown>(folderPath: string) => Promise<T>
 }
 
 declare global {

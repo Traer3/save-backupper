@@ -6,6 +6,7 @@ import ButtonHolder from './ButtonHolder'
 
 const NewBackup = (): React.JSX.Element => {
   const [showIcons, setShowIcons] = useState(false)
+  const [savePath, setSavePath] = useState('save path')
   const scrollRef = useRef<HTMLUListElement>(null)
   const iconNames = [
     'settings',
@@ -38,6 +39,11 @@ const NewBackup = (): React.JSX.Element => {
     setShowIcons(!showIcons)
   }
 
+  const onSave = (): void | null => {
+    if (!savePath || savePath === 'save path') return null
+    window.api.getFolderInfo(savePath)
+  }
+
   return (
     <div className="non-draggable" style={styles.mainBody}>
       <SaveForm
@@ -47,7 +53,12 @@ const NewBackup = (): React.JSX.Element => {
         onClick={onShowIcons}
       />
       <div style={styles.formHolder}>
-        <SaveTextInfoForm disableEdit={false} savePath="save path" lastBackup="backup delay" />
+        <SaveTextInfoForm
+          disableEdit={false}
+          savePath={savePath}
+          lastBackup="backup delay"
+          setSavePath={setSavePath}
+        />
       </div>
       {showIcons && (
         <ul ref={scrollRef} onWheel={handleWheel} className="non-draggable" style={styles.listBody}>
@@ -61,7 +72,7 @@ const NewBackup = (): React.JSX.Element => {
       )}
       <div style={styles.buttonsAlign}>
         <ButtonHolder>
-          <ButtonForm size={50} iconName="save" />
+          <ButtonForm size={50} iconName="save" onClick={onSave} />
           <ButtonForm size={50} iconName="cancel" />
         </ButtonHolder>
       </div>

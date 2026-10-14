@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { authorizationIps } from './ips/authorizationIps'
 import { driverSeriviceIps } from './ips/driverSeriviceIps'
+import { filesServiceIps } from './ips/filesServiceIps'
 
 function createWindow(): void {
   // Create the browser window.
@@ -56,6 +57,8 @@ app.whenReady().then(() => {
   authorizationIps()
 
   driverSeriviceIps()
+
+  filesServiceIps()
 
   createWindow()
 

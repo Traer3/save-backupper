@@ -4,17 +4,28 @@ interface SaveTextInfoFormProps {
   savePath?: string
   lastBackup?: string
   disableEdit: boolean
+  setSavePath: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function SaveTextInfoForm({
   savePath,
   lastBackup,
-  disableEdit
+  disableEdit,
+  setSavePath
 }: SaveTextInfoFormProps): React.JSX.Element {
+  // const handleChange = () => {
+
+  // }
   return (
     <>
       <div title={savePath} style={styles.folderPosition}>
-        <input disabled={disableEdit} placeholder={savePath} style={styles.textStyle} />
+        <input
+          disabled={disableEdit}
+          //value={savePath}
+          placeholder={savePath}
+          style={styles.textStyle}
+          onChange={(e) => setSavePath(e.target.value)}
+        />
         <ButtonForm size={25} iconName="folder" />
       </div>
       <input

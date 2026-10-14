@@ -27,8 +27,8 @@ function App(): React.JSX.Element {
     //await window.api.createFolder()
     //await window.api.uploadFile('test.txt')
     //await window.api.deleteMainFolder()
-    //await window.api.filesInMainFolder()
-    await window.api.textFile('Test kys now')
+    await window.api.filesInMainFolder()
+    //await window.api.textFile('Test kys now')
   }
 
   const testData = [

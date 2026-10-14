@@ -9,7 +9,8 @@ const api = {
   uploadFile: (fileName: string) => ipcRenderer.invoke('uploadFile', fileName),
   deleteMainFolder: () => ipcRenderer.invoke('filesInMainFolder'),
   filesInMainFolder: () => ipcRenderer.invoke('filesInMainFolder'),
-  textFile: (textInfo: string) => ipcRenderer.invoke('textFile', textInfo)
+  textFile: (textInfo: string) => ipcRenderer.invoke('textFile', textInfo),
+  getFolderInfo: (folderPath: string) => ipcRenderer.invoke('get-folder-info', folderPath)
 }
 
 if (process.contextIsolated) {

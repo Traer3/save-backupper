@@ -1,10 +1,16 @@
 import { google, drive_v3 } from 'googleapis'
 import { authorizationService } from './authorizationService'
 import { createReadStream } from 'fs'
-import { toolsService } from './toolsService'
+//import { toolsService } from './toolsService'
+
+export type ResponseFormat = 'files' | 'folders' | 'all'
+
+export interface FilesInMainFolderOptions {
+  choice?: ResponseFormat
+}
 
 export class DriverService {
-  private FOLDER_NAME = 'SaveBackupper'
+  private FOLDER_NAME = 'GameBackups'
 
   private async getDriverClient(): Promise<drive_v3.Drive | null> {
     const authClietn = await authorizationService.checkToken()
@@ -31,7 +37,7 @@ export class DriverService {
 
       if (existingFiles && existingFiles.length > 0) {
         const folderId = existingFiles[0].id!
-        console.log(`Folder already exists`)
+        //console.log(`Folder already exists`)
         return folderId
       }
 
@@ -62,7 +68,7 @@ export class DriverService {
     fileName: string
   ): Promise<string | null> {
     try {
-      const filePath = toolsService.getFilePath(fileName)
+      const filePath = fileName //toolsService.getFilePath(fileName)
       const drive = await this.getDriverClient()
       if (!drive) return null
 
@@ -125,21 +131,35 @@ export class DriverService {
     }
   }
 
-  async filesInMainFolder(): Promise<drive_v3.Schema$File[]> {
+  async filesInMainFolder({ choice = 'all' }: FilesInMainFolderOptions = {}): Promise<
+    drive_v3.Schema$File[]
+  > {
     try {
       const folderId = await this.getOrCreateAppFolder()
       if (!folderId) {
-        console.error(`Missing folder SaveBackupperI ID:`)
+        console.error(`Missing folder SaveBackupper ID:`)
         return []
       }
 
       const drive = await this.getDriverClient()
       if (!drive) return []
 
+      const selectResponse = (): string => {
+        switch (choice) {
+          case 'files':
+            return `'${folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false`
+          case 'folders':
+            return `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
+          default:
+            return `'${folderId}' in parents and trashed = false`
+        }
+      }
+
       const response = await drive.files.list({
-        q: `'${folderId}' in parents and trashed = false`,
-        fields: 'files(id, name, mimeType, createdTime, size)',
-        orderBy: 'createdTime desc'
+        q: selectResponse(),
+        fields: 'files(id, name)', //, mimeType, createdTime
+        orderBy: 'createdTime desc',
+        spaces: 'drive'
       })
 
       console.log('FIles: ', response.data.files)
