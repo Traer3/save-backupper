@@ -10,7 +10,13 @@ const api = {
   deleteMainFolder: () => ipcRenderer.invoke('filesInMainFolder'),
   filesInMainFolder: () => ipcRenderer.invoke('filesInMainFolder'),
   textFile: (textInfo: string) => ipcRenderer.invoke('textFile', textInfo),
-  getFolderInfo: (folderPath: string) => ipcRenderer.invoke('get-folder-info', folderPath)
+  getFolderInfo: (folderPath: string) => ipcRenderer.invoke('get-folder-info', folderPath),
+  archive: (sourceDir: string, outZipPath: string) =>
+    ipcRenderer.invoke('archive', sourceDir, outZipPath),
+  extractArchive: (sourceDir: string, outZipPath: string) =>
+    ipcRenderer.invoke('extract_archive', sourceDir, outZipPath),
+  backupUploader: (folderPath: string, folderName: string) =>
+    ipcRenderer.invoke('upload-backup-to-google', folderPath, folderName)
 }
 
 if (process.contextIsolated) {

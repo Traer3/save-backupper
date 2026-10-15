@@ -41,7 +41,13 @@ const NewBackup = (): React.JSX.Element => {
 
   const onSave = (): void | null => {
     if (!savePath || savePath === 'save path') return null
-    window.api.getFolderInfo(savePath)
+    //window.api.getFolderInfo(savePath)
+    console.log('save path : ', savePath)
+    window.api.backupUploader(savePath, 'DarkSouls II') //Заменить DarkSouls II на то что юзер передает
+  }
+
+  const onCancel = (): void | null => {
+    return console.log('test')
   }
 
   return (
@@ -73,7 +79,7 @@ const NewBackup = (): React.JSX.Element => {
       <div style={styles.buttonsAlign}>
         <ButtonHolder>
           <ButtonForm size={50} iconName="save" onClick={onSave} />
-          <ButtonForm size={50} iconName="cancel" />
+          <ButtonForm size={50} iconName="cancel" onClick={onCancel} />
         </ButtonHolder>
       </div>
     </div>

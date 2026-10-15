@@ -64,11 +64,11 @@ export class DriverService {
 
   async uploadFileToFolder(
     parentFolderId: string,
-    //filePath: string,
+    filePath: string,
     fileName: string
   ): Promise<string | null> {
     try {
-      const filePath = fileName //toolsService.getFilePath(fileName)
+      //const filePath = fileName //toolsService.getFilePath(fileName)
       const drive = await this.getDriverClient()
       if (!drive) return null
 
@@ -102,7 +102,7 @@ export class DriverService {
       console.error(`Missing folder SaveBackupperI ID:`)
       return false
     }
-    const fileId = await this.uploadFileToFolder(folderId, fileName)
+    const fileId = await this.uploadFileToFolder(folderId, 'укажи путь нормальный', fileName)
     return fileId !== null
   }
 
@@ -196,6 +196,41 @@ export class DriverService {
     })
 
     return true
+  }
+
+  async createSubFolder(parentFolderId: string, folderName: string): Promise<string | null> {
+    try {
+      const drive = await this.getDriverClient()
+      if (!drive) return null
+
+      const searchResponse = await drive.files.list({
+        q: `'${parentFolderId}' in parents and name = '${folderName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+        fields: 'files(id, name)',
+        spaces: 'drive'
+      })
+
+      const existingFolders = searchResponse.data.files
+      if (existingFolders && existingFolders.length > 0) {
+        return existingFolders[0].id || null
+      }
+
+      const fileMetadata = {
+        name: folderName,
+        mimeType: 'application/vnd.google-apps.folder',
+        parents: [parentFolderId]
+      }
+
+      const response = await drive.files.create({
+        requestBody: fileMetadata,
+        fields: 'id, name'
+      })
+
+      console.log(`Sub Folder ${folderName} successfully created!`)
+      return response.data.id || null
+    } catch (err) {
+      console.error(`Error while creating sub folder:\n`, err)
+      return null
+    }
   }
 }
 

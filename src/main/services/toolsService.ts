@@ -65,13 +65,12 @@ export class ToolsService {
     }
   }
 
-  async deleteFile(fileName: string): Promise<boolean | null> {
+  async deleteFile(filePath: string): Promise<boolean | null> {
     try {
-      const filePath = join(app.getPath('userData'), fileName)
       await rm(filePath, { recursive: true })
       return true
     } catch (err) {
-      console.log(`❌ Error deleting file : ${fileName}\n${err}`)
+      console.log(`❌ Error deleting file : ${filePath}\n${err}`)
       return null
     }
   }

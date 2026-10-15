@@ -27,8 +27,10 @@ function App(): React.JSX.Element {
     //await window.api.createFolder()
     //await window.api.uploadFile('test.txt')
     //await window.api.deleteMainFolder()
-    await window.api.filesInMainFolder()
+    //await window.api.filesInMainFolder()
     //await window.api.textFile('Test kys now')
+    //await window.api.archive('C:\\Users\\traer\\AppData\\Roaming\\DarkSoulsII','C:\\Users\\traer\\AppData\\Roaming\\DarkSoulsII\\DarkSoulsIIBackUp.zip')
+    //await window.api.extractArchive('C:\\Users\\traer\\AppData\\Roaming\\DarkSoulsII\\DarkSoulsIIBackUp.zip','C:\\Users\\traer\\Desktop\\test')
   }
 
   const testData = [

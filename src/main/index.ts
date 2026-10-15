@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import { authorizationIps } from './ips/authorizationIps'
 import { driverSeriviceIps } from './ips/driverSeriviceIps'
 import { filesServiceIps } from './ips/filesServiceIps'
+import { backupUploaderIps } from './ips/backupUploaderIps'
 
 function createWindow(): void {
   // Create the browser window.
@@ -61,6 +62,8 @@ app.whenReady().then(() => {
   filesServiceIps()
 
   createWindow()
+
+  backupUploaderIps()
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

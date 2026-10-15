@@ -10,6 +10,9 @@ export interface CustomAPI {
   filesInMainFolder: <T = unknown>() => Promise<T>
   textFile: <T = unknown>(textInfo: string) => Promise<T>
   getFolderInfo: <T = unknown>(folderPath: string) => Promise<T>
+  archive: <T = unknown>(sourceDir: string, outZipPath: string) => Promise<T>
+  extractArchive: <T = unknown>(sourceDir: string, outZipPath: string) => Promise<T>
+  backupUploader: <T = unknown>(folderPath: string, folderName: string) => Promise<T>
 }
 
 declare global {
