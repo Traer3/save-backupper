@@ -10,12 +10,10 @@ const Settings = ({ setAuth, setEnableSettings }: SettingsProps): React.JSX.Elem
     console.log('Deleted')
   }
   const logout = async (): Promise<void> => {
-    const answer = await window.api.logout()
-    if (answer) {
-      console.log('TokenDeleted')
-      setAuth(false)
-      setEnableSettings(false)
-    }
+    await window.api.logout()
+    console.log('TokenDeleted')
+    setAuth(false)
+    setEnableSettings(false)
   }
   return (
     <div style={styles.mainBody}>

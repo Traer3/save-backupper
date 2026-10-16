@@ -112,19 +112,16 @@ export class AuthorizationService {
     }
   }
 
-  async deleteToken(): Promise<boolean | null> {
+  async deleteToken(): Promise<void> {
     try {
       const tokenExists = await toolsService.exists(this.TOKEN_FILE)
       if (tokenExists) {
-        const answer = toolsService.deleteFile(this.TOKEN_FILE)
+        const tokenPath = toolsService.getFilePath(this.TOKEN_FILE)
+        await toolsService.deleteFile(tokenPath)
         console.log('Token deleted!')
-        return answer
       }
-      console.log(`${this.TOKEN_FILE} does not exist`)
-      return false
     } catch (err) {
-      console.log(`Error delteting token`, err)
-      return null
+      throw new Error(`Error delteting token ${err}`)
     }
   }
 

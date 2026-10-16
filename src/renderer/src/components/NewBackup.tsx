@@ -29,7 +29,6 @@ const NewBackup = (): React.JSX.Element => {
     'default'
   ]
 
-
   const handleWheel = (e: React.WheelEvent<HTMLUListElement>): void => {
     if (scrollRef.current) {
       if (e.deltaY !== 0) {
