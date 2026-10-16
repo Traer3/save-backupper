@@ -80,7 +80,7 @@ export class DriverService {
     if (!response.data.id) {
       throw new Error(`Error while working with ${fileName}\n`)
     }
-    console.log(`File ${fileName} successfully uploaded!`)
+    //console.log(`File ${fileName} successfully uploaded!`)
     return response.data.id
   }
 
@@ -116,6 +116,38 @@ export class DriverService {
       console.error(`Error while moving target to trash bin\n`, err)
       return false
     }
+  }
+
+  async filesInSubFolder(folderId: string): Promise<drive_v3.Schema$File[]> {
+    //console.log('folder ID:', folderId)
+    const drive = await this.getDriverClient()
+
+    const response = await drive.files.list({
+      q: `'${folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false`,
+      fields: 'files(id)', //createdTime
+      orderBy: 'createdTime desc',
+      spaces: 'drive'
+    })
+    if (!response.data.files) {
+      throw new Error(`Error reading subFolder files`)
+    }
+    console.log('FIles: ', response.data.files)
+    return response.data.files
+  }
+
+  async deleteInDrive(fileId: string): Promise<void> {
+    const drive = await this.getDriverClient()
+
+    await drive.files
+      .update({
+        fileId: fileId,
+        requestBody: {
+          trashed: true
+        }
+      })
+      .catch((err) => {
+        console.error(`Error while moving target to trash bin\n`, err)
+      })
   }
 
   async filesInMainFolder({ choice = 'all' }: FilesInMainFolderOptions = {}): Promise<

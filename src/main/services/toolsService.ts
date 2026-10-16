@@ -66,9 +66,9 @@ export class ToolsService {
   }
 
   async deleteFile(filePath: string): Promise<void> {
-    console.log('filePath: ', filePath)
+    //console.log('filePath: ', filePath)
     await rm(filePath, { recursive: true })
-    console.log(`file ${filePath} : successfully deleted!`)
+    //console.log(`file ${filePath} : successfully deleted!`)
   }
 }
 

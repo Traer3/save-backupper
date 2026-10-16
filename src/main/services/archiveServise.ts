@@ -5,7 +5,7 @@ export class ArchiveServise {
     const zip = new AdmZip()
     zip.addLocalFolder(sourceDir, '')
     await zip.writeZipPromise(outZipPath)
-    console.log(`Archive successfully created at: ${outZipPath}`)
+    //console.log(`Archive successfully created at: ${outZipPath}`)
   }
 
   async extractZipArchive(zipPath: string, targetDir: string): Promise<void> {
