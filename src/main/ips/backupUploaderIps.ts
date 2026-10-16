@@ -3,7 +3,7 @@ import { backupUploaderService } from '../services/backupUploaderService'
 
 export function backupUploaderIps(): void {
   ipcMain.handle('upload-backup-to-google', async (_, folderPath: string, folderName: string) => {
-    await backupUploaderService.uploadBackup(folderPath, folderName)
+    return await backupUploaderService.uploadBackup(folderPath, folderName)
   })
 
   //   ipcMain.handle('get-folder-info', async (_, folderPath: string) => {

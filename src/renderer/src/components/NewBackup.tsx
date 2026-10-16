@@ -3,11 +3,13 @@ import ButtonForm from './ButtonForm'
 import SaveForm from './SaveForm'
 import SaveTextInfoForm from './SaveTextInfoForm'
 import ButtonHolder from './ButtonHolder'
+import Loading from './Loading'
 
 const NewBackup = (): React.JSX.Element => {
   const [showIcons, setShowIcons] = useState(false)
   const [savePath, setSavePath] = useState('save path')
   const scrollRef = useRef<HTMLUListElement>(null)
+  const [loading, setLoading] = useState(false)
   const iconNames = [
     'settings',
     'addCircle',
@@ -27,6 +29,7 @@ const NewBackup = (): React.JSX.Element => {
     'default'
   ]
 
+
   const handleWheel = (e: React.WheelEvent<HTMLUListElement>): void => {
     if (scrollRef.current) {
       if (e.deltaY !== 0) {
@@ -39,11 +42,23 @@ const NewBackup = (): React.JSX.Element => {
     setShowIcons(!showIcons)
   }
 
-  const onSave = (): void | null => {
+  const onSave = async (): Promise<void | null> => {
     if (!savePath || savePath === 'save path') return null
-    //window.api.getFolderInfo(savePath)
+    setLoading(true)
     console.log('save path : ', savePath)
-    window.api.backupUploader(savePath, 'DarkSouls II') //Заменить DarkSouls II на то что юзер передает
+    const response = await onTriggerSave(savePath)
+    console.log('response: ', response)
+  }
+
+  const onTriggerSave = async (savePath): Promise<boolean> => {
+    try {
+      const response = await window.api.backupUploader<boolean>(savePath, 'DarkSouls II') //Заменить DarkSouls II на то что юзер передает
+      setLoading(!response)
+      return response
+    } catch (err) {
+      console.log(`Error in OnTriggerSave:\n${err}`)
+      return false
+    }
   }
 
   const onCancel = (): void | null => {
@@ -52,36 +67,43 @@ const NewBackup = (): React.JSX.Element => {
 
   return (
     <div className="non-draggable" style={styles.mainBody}>
-      <SaveForm
-        disableEdit={false}
-        name="game name..."
-        newBackground="#4C7DC0"
-        onClick={onShowIcons}
-      />
-      <div style={styles.formHolder}>
-        <SaveTextInfoForm
+      <Loading loading={loading}>
+        <SaveForm
           disableEdit={false}
-          savePath={savePath}
-          lastBackup="backup delay"
-          setSavePath={setSavePath}
+          name="game name..."
+          newBackground="#4C7DC0"
+          onClick={onShowIcons}
         />
-      </div>
-      {showIcons && (
-        <ul ref={scrollRef} onWheel={handleWheel} className="non-draggable" style={styles.listBody}>
-          {iconNames.map((iconName) => (
-            <li key={iconName} style={{ flexShrink: 0 }}>
-              <ButtonForm size={50} iconName={iconName} />{' '}
-              {/*добавишь функцию , если чел нажал на кнопку то получил имя желанной иконки  */}
-            </li>
-          ))}
-        </ul>
-      )}
-      <div style={styles.buttonsAlign}>
-        <ButtonHolder>
-          <ButtonForm size={50} iconName="save" onClick={onSave} />
-          <ButtonForm size={50} iconName="cancel" onClick={onCancel} />
-        </ButtonHolder>
-      </div>
+        <div style={styles.formHolder}>
+          <SaveTextInfoForm
+            disableEdit={false}
+            savePath={savePath}
+            lastBackup="backup delay"
+            setSavePath={setSavePath}
+          />
+        </div>
+        {showIcons && (
+          <ul
+            ref={scrollRef}
+            onWheel={handleWheel}
+            className="non-draggable"
+            style={styles.listBody}
+          >
+            {iconNames.map((iconName) => (
+              <li key={iconName} style={{ flexShrink: 0 }}>
+                <ButtonForm size={50} iconName={iconName} />{' '}
+                {/*добавишь функцию , если чел нажал на кнопку то получил имя желанной иконки  */}
+              </li>
+            ))}
+          </ul>
+        )}
+        <div style={styles.buttonsAlign}>
+          <ButtonHolder>
+            <ButtonForm size={50} iconName="save" onClick={onSave} />
+            <ButtonForm size={50} iconName="cancel" onClick={onCancel} />
+          </ButtonHolder>
+        </div>
+      </Loading>
     </div>
   )
 }
