@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import SaveForm from './SaveForm'
 import SaveInfoForm from './SaveInfoForm'
+import TimerForm from './TimerForm'
 
 interface SaveFileProps {
   name?: string
@@ -13,9 +14,11 @@ const SaveFile = ({ name, savePath, lastBackup }: SaveFileProps): React.JSX.Elem
   const showExtraInfo = (): void => {
     setShowExtra(!showExtra)
   }
+
   return (
     <>
       <SaveForm disableEdit={true} name={name} onClick={showExtraInfo} />
+      <TimerForm initialSeconds={199} />
       {showExtra && <SaveInfoForm savePath={savePath} lastBackup={lastBackup} />}
     </>
   )
