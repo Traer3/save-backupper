@@ -24,15 +24,18 @@ const SaveForm = ({
       <div style={styles.nameInputPosition}>
         <ButtonForm size={50} iconName={iconName} onClick={onClick} />
       </div>
-      <input
-        disabled={disableEdit}
-        placeholder={name}
-        style={{
-          ...styles.inputBody,
-          backgroundColor: newBackground ? newBackground : 'transparent'
-        }}
-      />
-      {children}
+      <div style={styles.holderDiv}>
+        <input
+          disabled={disableEdit}
+          placeholder={name}
+          style={{
+            ...styles.inputBody,
+            backgroundColor: newBackground ? newBackground : 'transparent'
+          }}
+        />
+
+        {children}
+      </div>
     </li>
   )
 }
@@ -61,10 +64,11 @@ const styles: Record<string, React.CSSProperties> = {
   },
   inputBody: {
     padding: 5,
-    borderStyle: 'solid',
-    borderColor: '#97DEBF', //4C7DC0
-    borderWidth: 1,
-    borderRadius: 2,
+    // borderStyle: 'solid',
+    //borderColor: '#97DEBF', //4C7DC0
+    // borderWidth: 1,
+    // borderRadius: 2,
+    border: 'none',
     width: '100%',
     textAlign: 'start',
     fontSize: 25,
@@ -73,5 +77,15 @@ const styles: Record<string, React.CSSProperties> = {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     userSelect: 'text'
+  },
+  holderDiv: {
+    borderColor: '#97DEBF',
+    borderWidth: 1,
+    borderRadius: 2,
+    borderStyle: 'solid',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5
   }
 }

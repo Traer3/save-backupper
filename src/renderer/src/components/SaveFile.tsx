@@ -17,8 +17,10 @@ const SaveFile = ({ name, savePath, lastBackup }: SaveFileProps): React.JSX.Elem
 
   return (
     <>
-      <SaveForm disableEdit={true} name={name} onClick={showExtraInfo} />
-      <TimerForm initialSeconds={199} />
+      <SaveForm disableEdit={true} name={name} onClick={showExtraInfo}>
+        <TimerForm initialSeconds={5123419200} onComplete={() => console.log('complete')} />
+      </SaveForm>
+
       {showExtra && <SaveInfoForm savePath={savePath} lastBackup={lastBackup} />}
     </>
   )

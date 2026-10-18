@@ -37,7 +37,7 @@ function App(): React.JSX.Element {
     //C:\Users\traer\AppData\Roaming\DarkSoulsII\011000010a3889c9
     {
       id: 1,
-      name: 'peak',
+      name: 'Dark souls 2',
       savePath: 'DarkSoulsII011000010a3889c9',
       lastBackup: '01.10.2026'
     },
