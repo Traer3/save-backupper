@@ -80,6 +80,12 @@ const NewBackup = (): React.JSX.Element => {
             lastBackup="backup delay"
             setSavePath={setSavePath}
           />
+          <ButtonHolder>
+            <ButtonForm size={50} iconName={'halfHour'} />
+            <ButtonForm size={50} iconName={'oneHour'} />
+            <ButtonForm size={50} iconName={'twelveHours'} />
+            <ButtonForm size={50} iconName={'oneMonth'} />
+          </ButtonHolder>
         </div>
         {showIcons && (
           <ul

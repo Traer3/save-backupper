@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 interface TimerFormProps {
+  // на будущее передавать не сами секунды , а конечное время через Date.now() без проеба
   initialSeconds: number
   onComplete?: () => void
 }

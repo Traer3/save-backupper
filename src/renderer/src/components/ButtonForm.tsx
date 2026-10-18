@@ -14,6 +14,10 @@ import terminalIcon from '../../../../resources/terminalIcon.png'
 import toggleOffIcon from '../../../../resources/toggleOffIcon.png'
 import toggleOnIcon from '../../../../resources/toggleOnIcon.png'
 import folderIcon from '../../../../resources/folderIcon.png'
+import halfHourIcon from '../../../../resources/halfHourIcon.png'
+import oneHourIcon from '../../../../resources/oneHourIcon.png'
+import twelveHoursIcon from '../../../../resources/twelveHoursIcon.png'
+import oneMonthIcon from '../../../../resources/oneMonthIcon.png'
 import DefaultIcon from '../../../../resources/defaultIcon.png'
 
 type ButtonFormProps = {
@@ -38,6 +42,10 @@ const icons = {
   toggleOff: toggleOffIcon,
   toggleOn: toggleOnIcon,
   folder: folderIcon,
+  halfHour:halfHourIcon,
+  oneHour: oneHourIcon,
+  twelveHours: twelveHoursIcon,
+  oneMonth: oneMonthIcon,
   default: DefaultIcon
 }
 
