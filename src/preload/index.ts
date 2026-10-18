@@ -16,7 +16,8 @@ const api = {
   extractArchive: (sourceDir: string, outZipPath: string) =>
     ipcRenderer.invoke('extract_archive', sourceDir, outZipPath),
   backupUploader: (folderPath: string, folderName: string) =>
-    ipcRenderer.invoke('upload-backup-to-google', folderPath, folderName)
+    ipcRenderer.invoke('upload-backup-to-google', folderPath, folderName),
+  getLastItemInfo: (folderName: string) => ipcRenderer.invoke('get-last-item-info', folderName)
 }
 
 if (process.contextIsolated) {

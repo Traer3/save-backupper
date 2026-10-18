@@ -13,9 +13,6 @@ export default function SaveTextInfoForm({
   disableEdit,
   setSavePath
 }: SaveTextInfoFormProps): React.JSX.Element {
-  // const handleChange = () => {
-
-  // }
   return (
     <>
       <div title={savePath} style={styles.folderPosition}>

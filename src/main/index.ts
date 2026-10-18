@@ -6,6 +6,7 @@ import { authorizationIps } from './ips/authorizationIps'
 import { driverSeriviceIps } from './ips/driverSeriviceIps'
 import { filesServiceIps } from './ips/filesServiceIps'
 import { backupUploaderIps } from './ips/backupUploaderIps'
+import { getInfoIps } from './ips/getInfoIps'
 
 function createWindow(): void {
   // Create the browser window.
@@ -62,6 +63,8 @@ app.whenReady().then(() => {
   filesServiceIps()
 
   createWindow()
+
+  getInfoIps()
 
   backupUploaderIps()
 

@@ -124,14 +124,31 @@ export class DriverService {
 
     const response = await drive.files.list({
       q: `'${folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false`,
-      fields: 'files(id)', //createdTime
+      fields: 'files(id)',
       orderBy: 'createdTime desc',
       spaces: 'drive'
     })
     if (!response.data.files) {
       throw new Error(`Error reading subFolder files`)
     }
-    console.log('FIles: ', response.data.files)
+    //console.log('FIles: ', response.data.files)
+    return response.data.files
+  }
+
+  async folderFilesInfo(folderId: string): Promise<drive_v3.Schema$File[]> {
+    //console.log('folder ID:', folderId)
+    const drive = await this.getDriverClient()
+
+    const response = await drive.files.list({
+      q: `'${folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false`,
+      fields: 'files(id, name, mimeType, createdTime)',
+      orderBy: 'createdTime desc',
+      spaces: 'drive'
+    })
+    if (!response.data.files) {
+      throw new Error(`Error reading subFolder files`)
+    }
+    //console.log('FIles: ', response.data.files)
     return response.data.files
   }
 
@@ -180,7 +197,7 @@ export class DriverService {
         spaces: 'drive'
       })
 
-      console.log('FIles: ', response.data.files)
+      //console.log('FIles: ', response.data.files)
       return response.data.files || []
     } catch (err) {
       console.error(`Error while reading main folder:\n`, err)

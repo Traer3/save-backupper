@@ -38,6 +38,7 @@ const TimerForm = ({ initialSeconds, onComplete }: TimerFormProps): React.JSX.El
 
     return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
   }
+
   return (
     <div style={styles.mainBody}>
       <span title={`Time left: ${formatTime(timeLeft)}`}>{formatTime(timeLeft)}</span>
@@ -54,7 +55,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWidth: '600',
     color: '#EBF8E7',
     //border: '1px solid red',
-    maxWidth: '25%',
+    width: '27%',
     overflow: 'hidden',
     display: 'flex',
     justifyContent: 'flex-end'
