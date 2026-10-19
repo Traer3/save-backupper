@@ -23,6 +23,8 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
+    "@tanstack/react-query": "^5.104.4",
+    "@tanstack/react-query-devtools": "^5.104.4",
     "adm-zip": "^0.6.1",
     "googleapi": "^1.0.2",
     "googleapis": "^183.0.0"

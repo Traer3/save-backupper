@@ -1,46 +1,69 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import SaveForm from './SaveForm'
 import SaveInfoForm from './SaveInfoForm'
 import TimerForm from './TimerForm'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import Loading from './Loading'
 
 interface SaveFileProps {
-  name?: string
-  savePath?: string
+  gameName: string
+  savePath: string
   lastBackup?: string
 }
 
-const SaveFile = ({ name, savePath, lastBackup }: SaveFileProps): React.JSX.Element => {
+const SaveFile = ({ gameName, savePath, lastBackup }: SaveFileProps): React.JSX.Element => {
   const [showExtra, setShowExtra] = useState(false)
-  const [timeLeft, setTimeLeft] = useState<number>(0)
   const intervalHours = 128
-  const getRemainingSeconds = (lastBackupTime: string): void => {
+  const getRemainingSeconds = (lastBackupTime: string): number => {
     const lastBackupMs = new Date(lastBackupTime).getTime()
     const intervalMs = intervalHours * 60 * 60 * 1000
     const nextBackupMs = lastBackupMs + intervalMs
 
     const diffInSeconds = Math.floor((nextBackupMs - Date.now()) / 1000)
-    setTimeLeft(diffInSeconds > 0 ? diffInSeconds : 0)
+    return diffInSeconds > 0 ? diffInSeconds : 0
   }
-  useEffect(() => {
-    const getTime = async (): Promise<void> => {
-      const info = await window.api.getLastItemInfo<string>('DarkSouls II')
-      getRemainingSeconds(info)
-      console.log('info : ', info)
+  const {
+    data: secondsLeft = 0,
+    isLoading,
+    isError,
+    error,
+    refetch
+  } = useQuery({
+    queryKey: ['lastBackupInfo', gameName, intervalHours],
+    queryFn: async () => {
+      const createdTimeIso = await window.api.getLastItemInfo<string>('DarkSouls II') //'DarkSouls II' заменить на gameName
+      return getRemainingSeconds(createdTimeIso)
     }
-    getTime()
-  }, [intervalHours])
+  })
+
+  const { mutate: createBackup, isPending: isBackingUp } = useMutation({
+    mutationFn: async () => {
+      return //await window.api.backupUploader(gameName, savePath)
+    },
+    onSuccess: () => {
+      console.log(`Backup created successfuly for ${gameName}`)
+      refetch()
+    },
+    onError: (err) => {
+      console.log(`Failed to create backup for ${gameName}: `, err)
+    }
+  })
 
   const showExtraInfo = (): void => {
     setShowExtra(!showExtra)
   }
 
+  if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
+
   return (
-    <>
-      <SaveForm disableEdit={true} name={name} onClick={showExtraInfo}>
-        <TimerForm initialSeconds={timeLeft} onComplete={() => console.log('complete')} />
-      </SaveForm>
-      {showExtra && <SaveInfoForm savePath={savePath} lastBackup={lastBackup} />}
-    </>
+    <Loading loading={isBackingUp || isLoading}>
+      <>
+        <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo}>
+          <TimerForm key={secondsLeft} initialSeconds={secondsLeft} onComplete={createBackup} />
+        </SaveForm>
+        {showExtra && <SaveInfoForm savePath={savePath} lastBackup={lastBackup} />}
+      </>
+    </Loading>
   )
 }
 
