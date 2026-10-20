@@ -11,6 +11,7 @@ export interface FilesInMainFolderOptions {
 
 export class DriverService {
   private FOLDER_NAME = 'GameBackups'
+  private DATA_FILE_NAME = 'userData.json'
 
   private async getDriverClient(): Promise<drive_v3.Drive> {
     const authClietn = await authorizationService.checkToken()
@@ -53,6 +54,59 @@ export class DriverService {
 
     console.log(`Folder created successfully!`)
     return folderResponse.data.id
+  }
+
+  async readJsonFile<T>(fileId: string): Promise<T> {
+    try {
+      const drive = await this.getDriverClient()
+      const response = await drive.files.get({
+        fileId: fileId,
+        alt: 'media'
+      })
+
+      const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
+      return data as T
+    } catch (err) {
+      throw new Error(`Failed to read file [${fileId}] from Google Drive:\n${err}`)
+    }
+  }
+
+  async getOrCreateDataFile(): Promise<string> {
+    const driver = await this.getDriverClient()
+    const mainFolderId = await this.getOrCreateAppFolder()
+    const searchResponse = await driver.files.list({
+      q: `'${mainFolderId}' in parents and name = '${this.DATA_FILE_NAME}' and trashed = false`,
+      fields: 'files(id, name)',
+      spaces: 'drive'
+    })
+
+    const files = searchResponse.data.files
+    if (files && files.length > 0 && files[0].id) {
+      console.log(`Found existing ${this.FOLDER_NAME}: ${files[0].id}`)
+      return files[0].id
+    }
+
+    console.log(`File ${this.DATA_FILE_NAME} not found. Creating...`)
+
+    const createResponse = await driver.files.create({
+      requestBody: {
+        name: this.DATA_FILE_NAME,
+        parents: [mainFolderId],
+        mimeType: 'application/json'
+      },
+      media: {
+        mimeType: 'application/json',
+        body: JSON.stringify([], null, 2)
+      },
+      fields: 'id'
+    })
+
+    if (!createResponse.data.id) {
+      throw new Error(`Failed to get ID for newly created ${this.DATA_FILE_NAME}`)
+    }
+
+    console.log(`Created new ${this.DATA_FILE_NAME}`)
+    return createResponse.data.id
   }
 
   async uploadFileToFolder(

@@ -14,6 +14,7 @@ export interface CustomAPI {
   extractArchive: <T = unknown>(sourceDir: string, outZipPath: string) => Promise<T>
   backupUploader: <T = unknown>(folderPath: string, folderName: string) => Promise<T>
   getLastItemInfo: <T = unknown>(folderName: string) => Promise<T>
+  readUserData: <T = unknown>() => Promise<T>
 }
 
 declare global {
