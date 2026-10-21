@@ -109,6 +109,21 @@ export class DriverService {
     return createResponse.data.id
   }
 
+  async updateJsonFile<T>(fileId: string, data: T): Promise<void> {
+    const driver = await this.getDriverClient()
+    const jsonContent = JSON.stringify(data, null, 2)
+
+    await driver.files.update({
+      fileId: fileId,
+      media: {
+        mimeType: 'application/json',
+        body: jsonContent
+      },
+      fields: 'id, name, modifiedTime'
+    })
+    console.log(`UserData successfully updated`)
+  }
+
   async uploadFileToFolder(
     parentFolderId: string,
     filePath: string,

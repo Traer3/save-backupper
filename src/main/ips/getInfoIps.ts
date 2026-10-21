@@ -10,4 +10,8 @@ export function getInfoIps(): void {
   ipcMain.handle('read-user-data', async () => {
     return await userDataService.readDataJson()
   })
+
+  ipcMain.handle('change-user-data', async (_, newData: string) => {
+    return await userDataService.changeUserData(newData)
+  })
 }

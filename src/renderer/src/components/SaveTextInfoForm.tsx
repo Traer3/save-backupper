@@ -1,18 +1,37 @@
 import ButtonForm from './ButtonForm'
+import { UserData } from './NewBackup'
 
 interface SaveTextInfoFormProps {
   savePath?: string
   lastBackup?: string
   disableEdit: boolean
-  setSavePath: React.Dispatch<React.SetStateAction<string>>
+  setUserData?: React.Dispatch<React.SetStateAction<UserData>>
 }
 
 export default function SaveTextInfoForm({
   savePath,
   lastBackup,
   disableEdit,
-  setSavePath
+  //setSavePath,
+  setUserData
 }: SaveTextInfoFormProps): React.JSX.Element {
+  const changePath = (value: string): void => {
+    if (disableEdit || !setUserData) return
+    // тут еще ебнутее , строка не должны быть пустой и должна быть системной
+    setUserData((prev) => ({
+      ...prev,
+      gamePath: value
+    }))
+  }
+
+  const changeDelay = (value: string): void => {
+    if (disableEdit || !setUserData) return
+    //конечный value должен быть в секундах
+    setUserData((prev) => ({
+      ...prev,
+      backupDelay: value
+    }))
+  }
   return (
     <>
       <div title={savePath} style={styles.folderPosition}>
@@ -21,7 +40,7 @@ export default function SaveTextInfoForm({
           //value={savePath}
           placeholder={savePath}
           style={styles.textStyle}
-          onChange={(e) => setSavePath(e.target.value)}
+          onChange={(e) => changePath(e.target.value)}
         />
         <ButtonForm size={25} iconName="folder" />
       </div>
@@ -29,6 +48,7 @@ export default function SaveTextInfoForm({
         disabled={disableEdit}
         placeholder={lastBackup}
         style={{ ...styles.textStyle, alignItems: 'center', display: 'flex' }}
+        onChange={(e) => changeDelay(e.target.value)}
       />
     </>
   )

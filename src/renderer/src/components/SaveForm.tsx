@@ -1,4 +1,5 @@
 import ButtonForm from './ButtonForm'
+import { UserData } from './NewBackup'
 
 interface SaveFormProps {
   name?: string
@@ -7,6 +8,7 @@ interface SaveFormProps {
   onClick?: () => void
   newBackground?: string
   disableEdit: boolean
+  setUserData?: React.Dispatch<React.SetStateAction<UserData>>
 }
 const SaveForm = ({
   name,
@@ -14,8 +16,16 @@ const SaveForm = ({
   children,
   onClick,
   newBackground,
-  disableEdit
+  disableEdit,
+  setUserData
 }: SaveFormProps): React.JSX.Element => {
+  const changeName = (value: string): void => {
+    if (disableEdit || !setUserData) return
+    setUserData((prev) => ({
+      ...prev,
+      gameName: value
+    }))
+  }
   return (
     <li
       title={name}
@@ -32,6 +42,7 @@ const SaveForm = ({
             ...styles.inputBody,
             backgroundColor: newBackground ? newBackground : 'transparent'
           }}
+          onChange={(e) => changeName(e.target.value)}
         />
 
         {children}

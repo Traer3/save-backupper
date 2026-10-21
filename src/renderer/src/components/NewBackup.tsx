@@ -5,9 +5,19 @@ import SaveTextInfoForm from './SaveTextInfoForm'
 import ButtonHolder from './ButtonHolder'
 import Loading from './Loading'
 
+export interface UserData {
+  gameName: string
+  gamePath: string
+  backupDelay: string
+}
+
 const NewBackup = (): React.JSX.Element => {
+  const [userData, setUserData] = useState<UserData>({
+    gameName: 'DarkSouls II',
+    gamePath: 'save path',
+    backupDelay: '43200' //0
+  })
   const [showIcons, setShowIcons] = useState(false)
-  const [savePath, setSavePath] = useState('save path')
   const scrollRef = useRef<HTMLUListElement>(null)
   const [loading, setLoading] = useState(false)
   const iconNames = [
@@ -42,26 +52,35 @@ const NewBackup = (): React.JSX.Element => {
   }
 
   const onSave = async (): Promise<void | null> => {
-    if (!savePath || savePath === 'save path') return null
+    if (!userData.gamePath || userData.gamePath === 'save path') return null
     setLoading(true)
-    console.log('save path : ', savePath)
-    const response = await onTriggerSave(savePath)
-    console.log('response: ', response)
+    console.log('save path : ', userData.gamePath)
+    //const response = await onTriggerSave(userData.gamePath)
+    await writeInfo()
+    //console.log('response: ', response)
   }
 
-  const onTriggerSave = async (savePath): Promise<boolean> => {
-    try {
-      const response = await window.api.backupUploader<boolean>(savePath, 'DarkSouls II') //Заменить DarkSouls II на то что юзер передает
-      setLoading(!response)
-      return response
-    } catch (err) {
-      console.log(`Error in OnTriggerSave:\n${err}`)
-      return false
-    }
+  // const onTriggerSave = async (savePath: string): Promise<boolean> => {
+  //   try {
+  //     const response = await window.api.backupUploader<boolean>(savePath, userData.gameName)
+  //     setLoading(!response)
+  //     return response
+  //   } catch (err) {
+  //     console.log(`Error in OnTriggerSave:\n${err}`)
+  //     return false
+  //   }
+  // }
+
+  const writeInfo = async (): Promise<void> => {
+    if (userData.backupDelay === '0') throw new Error(`Im not that fast`)
+
+    const newFormat = JSON.stringify(userData)
+    await window.api.changeUserData(newFormat)
+    setLoading(false)
   }
 
   const onCancel = (): void | null => {
-    return console.log('test')
+    return console.log('test', userData)
   }
 
   return (
@@ -69,16 +88,17 @@ const NewBackup = (): React.JSX.Element => {
       <Loading loading={loading}>
         <SaveForm
           disableEdit={false}
-          name="game name..."
+          name={userData.gameName}
           newBackground="#4C7DC0"
           onClick={onShowIcons}
+          setUserData={setUserData}
         />
         <div style={styles.formHolder}>
           <SaveTextInfoForm
             disableEdit={false}
-            savePath={savePath}
-            lastBackup="backup delay"
-            setSavePath={setSavePath}
+            savePath={userData.gamePath}
+            lastBackup={userData.backupDelay}
+            setUserData={setUserData}
           />
           <ButtonHolder>
             <ButtonForm size={50} iconName={'halfHour'} />

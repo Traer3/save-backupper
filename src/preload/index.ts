@@ -18,7 +18,8 @@ const api = {
   backupUploader: (folderPath: string, folderName: string) =>
     ipcRenderer.invoke('upload-backup-to-google', folderPath, folderName),
   getLastItemInfo: (folderName: string) => ipcRenderer.invoke('get-last-item-info', folderName),
-  readUserData: () => ipcRenderer.invoke('read-user-data')
+  readUserData: () => ipcRenderer.invoke('read-user-data'),
+  changeUserData: (newData: string) => ipcRenderer.invoke('change-user-data', newData)
 }
 
 if (process.contextIsolated) {

@@ -15,6 +15,7 @@ export interface CustomAPI {
   backupUploader: <T = unknown>(folderPath: string, folderName: string) => Promise<T>
   getLastItemInfo: <T = unknown>(folderName: string) => Promise<T>
   readUserData: <T = unknown>() => Promise<T>
+  changeUserData: <T = unknown>(newData: string) => Promise<T>
 }
 
 declare global {

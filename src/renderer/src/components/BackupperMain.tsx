@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ButtonForm from './ButtonForm'
 import ButtonHolder from './ButtonHolder'
 import NewBackup from './NewBackup'
@@ -13,7 +13,7 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
   const [newBackup, setNetBackup] = useState(false)
   const [enableSettings, setEnableSettings] = useState(false)
 
-  // useEffect(() => {
+  // useEffect(() => { // хуйня создает 2 json вначале , исправь
   //   const getData = async (): Promise<void> => {
   //     const response = await window.api.readUserData()
   //     console.log('response: ', response)
