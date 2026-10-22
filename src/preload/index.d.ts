@@ -7,8 +7,8 @@ export interface CustomAPI {
   createFolder: <T = unknown>() => Promise<T>
   uploadFile: <T = unknown>(fileName: string) => Promise<T>
   deleteMainFolder: <T = unknown>() => Promise<T>
-  filesInMainFolder: <T = unknown>() => Promise<T>
-  textFile: <T = unknown>(textInfo: string) => Promise<T>
+  // filesInMainFolder: <T = unknown>() => Promise<T>
+  // textFile: <T = unknown>(textInfo: string) => Promise<T>
   getFolderInfo: <T = unknown>(folderPath: string) => Promise<T>
   archive: <T = unknown>(sourceDir: string, outZipPath: string) => Promise<T>
   extractArchive: <T = unknown>(sourceDir: string, outZipPath: string) => Promise<T>

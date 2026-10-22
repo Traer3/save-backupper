@@ -14,11 +14,11 @@ export function driverSeriviceIps(): void {
     await driverSerivice.deleteMainFolder()
   })
 
-  ipcMain.handle('filesInMainFolder', async () => {
-    await driverSerivice.filesInMainFolder()
-  })
+  // ipcMain.handle('filesInMainFolder', async () => {
+  //   await driverSerivice.filesInMainFolder()
+  // })
 
-  ipcMain.handle('textFile', async (_, textInfo: string) => {
-    await driverSerivice.textFile(textInfo)
-  })
+  // ipcMain.handle('textFile', async (_, textInfo: string) => {
+  //   await driverSerivice.textFile(textInfo)
+  // })
 }

@@ -236,70 +236,70 @@ export class DriverService {
       })
   }
 
-  async filesInMainFolder({ choice = 'all' }: FilesInMainFolderOptions = {}): Promise<
-    drive_v3.Schema$File[]
-  > {
-    try {
-      const folderId = await this.getOrCreateAppFolder()
-      if (!folderId) {
-        console.error(`Missing folder SaveBackupper ID:`)
-        return []
-      }
+  // async filesInMainFolder({ choice = 'all' }: FilesInMainFolderOptions = {}): Promise<
+  //   drive_v3.Schema$File[]
+  // > {
+  //   try {
+  //     const folderId = await this.getOrCreateAppFolder()
+  //     if (!folderId) {
+  //       console.error(`Missing folder SaveBackupper ID:`)
+  //       return []
+  //     }
 
-      const drive = await this.getDriverClient()
+  //     const drive = await this.getDriverClient()
 
-      const selectResponse = (): string => {
-        switch (choice) {
-          case 'files':
-            return `'${folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false`
-          case 'folders':
-            return `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
-          default:
-            return `'${folderId}' in parents and trashed = false`
-        }
-      }
+  //     const selectResponse = (): string => {
+  //       switch (choice) {
+  //         case 'files':
+  //           return `'${folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false`
+  //         case 'folders':
+  //           return `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
+  //         default:
+  //           return `'${folderId}' in parents and trashed = false`
+  //       }
+  //     }
 
-      const response = await drive.files.list({
-        q: selectResponse(),
-        fields: 'files(id, name)', //, mimeType, createdTime
-        orderBy: 'createdTime desc',
-        spaces: 'drive'
-      })
+  //     const response = await drive.files.list({
+  //       q: selectResponse(),
+  //       fields: 'files(id, name)', //, mimeType, createdTime
+  //       orderBy: 'createdTime desc',
+  //       spaces: 'drive'
+  //     })
 
-      //console.log('FIles: ', response.data.files)
-      return response.data.files || []
-    } catch (err) {
-      console.error(`Error while reading main folder:\n`, err)
-      return []
-    }
-  }
+  //     //console.log('FIles: ', response.data.files)
+  //     return response.data.files || []
+  //   } catch (err) {
+  //     console.error(`Error while reading main folder:\n`, err)
+  //     return []
+  //   }
+  // }
 
-  async textFile(textInfo: string): Promise<boolean> {
-    const folderId = await this.getOrCreateAppFolder()
-    if (!folderId) {
-      console.error(`Missing folder SaveBackupperI ID:`)
-      return false
-    }
+  // async textFile(textInfo: string): Promise<boolean> {
+  //   const folderId = await this.getOrCreateAppFolder()
+  //   if (!folderId) {
+  //     console.error(`Missing folder SaveBackupperI ID:`)
+  //     return false
+  //   }
 
-    const drive = await this.getDriverClient()
+  //   const drive = await this.getDriverClient()
 
-    const fileMetadata = {
-      name: 'notes.txt',
-      parents: [folderId]
-    }
+  //   const fileMetadata = {
+  //     name: 'notes.txt',
+  //     parents: [folderId]
+  //   }
 
-    const media = {
-      mimeType: 'text/plain',
-      body: `${textInfo}`
-    }
+  //   const media = {
+  //     mimeType: 'text/plain',
+  //     body: `${textInfo}`
+  //   }
 
-    await drive.files.create({
-      requestBody: fileMetadata,
-      media: media
-    })
+  //   await drive.files.create({
+  //     requestBody: fileMetadata,
+  //     media: media
+  //   })
 
-    return true
-  }
+  //   return true
+  // }
 
   async createSubFolder(parentFolderId: string, folderName: string): Promise<string> {
     const drive = await this.getDriverClient()

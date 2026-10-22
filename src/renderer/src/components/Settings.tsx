@@ -6,7 +6,8 @@ interface SettingsProps {
 }
 
 const Settings = ({ setAuth, setEnableSettings }: SettingsProps): React.JSX.Element => {
-  const deleteAllBackups = (): void => {
+  const deleteAllBackups = async (): Promise<void> => {
+    await window.api.deleteMainFolder()
     console.log('Deleted')
   }
   const logout = async (): Promise<void> => {
