@@ -45,7 +45,7 @@ export class FilesService {
       const filePaths = await this.folderPathData(folderPath)
       const answer = await this.uploadInfo(filePaths)
       console.log('response: ', answer)
-      return true 
+      return true
     } catch (err) {
       console.log(`Error while working in main: \n ${err}`)
       return false

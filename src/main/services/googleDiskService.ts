@@ -149,7 +149,7 @@ export class DriverService {
     if (!response.data.id) {
       throw new Error(`Error while working with ${fileName}\n`)
     }
-    //console.log(`File ${fileName} successfully uploaded!`)
+    //console.log(`File ${fileName} successfully uploaded!`) 
     return response.data.id
   }
 
