@@ -63,7 +63,6 @@ export class DriverService {
         fileId: fileId,
         alt: 'media'
       })
-
       const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
       return data as T
     } catch (err) {

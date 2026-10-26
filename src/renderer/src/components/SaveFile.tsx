@@ -13,7 +13,7 @@ interface SaveFileProps {
 
 const SaveFile = ({ gameName, savePath, lastBackup }: SaveFileProps): React.JSX.Element => {
   const [showExtra, setShowExtra] = useState(false)
-  const intervalHours = 228
+  const intervalHours = 2282222222
   const getRemainingSeconds = (lastBackupTime: string): number => {
     const lastBackupMs = new Date(lastBackupTime).getTime()
     const intervalMs = intervalHours * 60 * 60 * 1000
