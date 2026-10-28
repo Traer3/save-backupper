@@ -10,7 +10,7 @@ export class UserDataService {
   async readDataJson(): Promise<[]> {
     const dataFileId = await driverSerivice.getOrCreateDataFile()
     const userData = await driverSerivice.readJsonFile(dataFileId)
-    console.log('userData: ', userData)
+    //console.log('userData: ', userData)
     return userData as []
   }
 

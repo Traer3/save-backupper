@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import ButtonForm from './ButtonForm'
 import ButtonHolder from './ButtonHolder'
-import NewBackup from './NewBackup'
+import NewBackup, { UserData } from './NewBackup'
 import SaveFile from './SaveFile'
 import SaveListForm from './SaveListForm'
 import Settings from './Settings'
+import { useQuery } from '@tanstack/react-query'
+import Loading from './Loading'
 
 interface BackupperMainProps {
   setAuthorized: React.Dispatch<React.SetStateAction<boolean>>
@@ -13,13 +15,14 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
   const [newBackup, setNetBackup] = useState(false)
   const [enableSettings, setEnableSettings] = useState(false)
 
-  // useEffect(() => { // хуйня создает 2 json вначале , исправь
-  //   const getData = async (): Promise<void> => {
-  //     const response = await window.api.readUserData()
-  //     console.log('response: ', response)
-  //   }
-  //   getData()
-  // }, [])
+  const { data: userData, isLoading } = useQuery({
+    queryKey: ['userData'],
+    queryFn: async () => {
+      return await window.api.readUserData<UserData[]>()
+    }
+  })
+
+  //console.log('userData:', userData)
 
   const onNewBackup = (): void => {
     setNetBackup(!newBackup)
@@ -39,51 +42,38 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
     //await window.api.extractArchive('C:\\Users\\traer\\AppData\\Roaming\\DarkSoulsII\\DarkSoulsIIBackUp.zip','C:\\Users\\traer\\Desktop\\test')
   }
 
-  const testData = [
-    //C:\Users\traer\AppData\Roaming\DarkSoulsII\011000010a3889c9
-    {
-      id: 1,
-      name: 'Dark souls 2',
-      savePath: 'DarkSoulsII011000010a3889c9',
-      lastBackup: '01.10.2026'
-    },
-    {
-      id: 2,
-      name: 'dark',
-      savePath: 'asdASDasd',
-      lastBackup: '09.11.2026'
-    },
-    {
-      id: 3,
-      name: 'souls',
-      savePath: '324123423433sdfqwef2g233',
-      lastBackup: '12.08.2026'
-    }
-  ]
   return (
-    <div className="non-draggable" style={styles.mainBody}>
-      <div>
-        <ButtonHolder>
-          <ButtonForm size={35} iconName="start" />
-          <ButtonForm size={35} iconName="terminal" />
-          <ButtonForm size={35} iconName="addCircle" onClick={onNewBackup} />
-          <ButtonForm size={35} iconName="archive" onClick={createFolder} />
-          <ButtonForm size={35} iconName="settings" onClick={toggleSettings} />
-        </ButtonHolder>
+    <Loading loading={isLoading} loadingStyle={true}>
+      <div className="non-draggable" style={styles.mainBody}>
+        <div>
+          <ButtonHolder>
+            <ButtonForm size={35} iconName="start" />
+            <ButtonForm size={35} iconName="terminal" />
+            <ButtonForm size={35} iconName="addCircle" onClick={onNewBackup} />
+            <ButtonForm size={35} iconName="archive" onClick={createFolder} />
+            <ButtonForm size={35} iconName="settings" onClick={toggleSettings} />
+          </ButtonHolder>
+        </div>
+        {enableSettings && (
+          <Settings setAuth={setAuthorized} setEnableSettings={setEnableSettings} />
+        )}
+        {newBackup ? (
+          <NewBackup />
+        ) : (
+          <SaveListForm>
+            {userData?.map((obj) => (
+              <div key={obj.gamePath}>
+                <SaveFile
+                  gameName={obj.gameName}
+                  savePath={obj.gamePath}
+                  lastBackup={obj.backupDelay}
+                />
+              </div>
+            ))}
+          </SaveListForm>
+        )}
       </div>
-      {enableSettings && <Settings setAuth={setAuthorized} setEnableSettings={setEnableSettings} />}
-      {newBackup ? (
-        <NewBackup />
-      ) : (
-        <SaveListForm>
-          {testData.map((obj) => (
-            <div key={obj.id}>
-              <SaveFile gameName={obj.name} savePath={obj.savePath} lastBackup={obj.lastBackup} />
-            </div>
-          ))}
-        </SaveListForm>
-      )}
-    </div>
+    </Loading>
   )
 }
 
