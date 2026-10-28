@@ -100,6 +100,7 @@ const NewBackup = (): React.JSX.Element => {
             lastBackup={userData.backupDelay}
             setUserData={setUserData}
           />
+          {/* вы отдельный комп */}
           <ButtonHolder>
             <ButtonForm size={50} iconName={'halfHour'} />
             <ButtonForm size={50} iconName={'oneHour'} />
