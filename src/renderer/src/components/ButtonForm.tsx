@@ -17,6 +17,7 @@ import folderIcon from '../../../../resources/folderIcon.png'
 import halfHourIcon from '../../../../resources/halfHourIcon.png'
 import oneHourIcon from '../../../../resources/oneHourIcon.png'
 import twelveHoursIcon from '../../../../resources/twelveHoursIcon.png'
+import thirtyDaysIcon from '../../../../resources/thirtyDaysIcon.png'
 import oneMonthIcon from '../../../../resources/oneMonthIcon.png'
 import DefaultIcon from '../../../../resources/defaultIcon.png'
 
@@ -24,6 +25,8 @@ type ButtonFormProps = {
   size?: number;
   iconName?: string ;
   onClick?: () => void
+  onRightClick?: () => void
+  //onRiht
 }
 
 const icons = {
@@ -45,12 +48,22 @@ const icons = {
   halfHour:halfHourIcon,
   oneHour: oneHourIcon,
   twelveHours: twelveHoursIcon,
+  thirtyDays: thirtyDaysIcon,
   oneMonth: oneMonthIcon,
   default: DefaultIcon
 }
 
-function ButtonForm({ size, onClick, iconName }: ButtonFormProps): React.JSX.Element {
+function ButtonForm({ size, onClick, iconName, onRightClick }: ButtonFormProps): React.JSX.Element {
   const IconName = iconName ? iconName :"default";
+  const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    if(e.button === 0){
+      //left button
+      onClick?.()
+    }else if (e.button === 2) {
+      //right button
+      onRightClick?.()
+    }
+  }
   return (
     <button
       style={{
@@ -66,7 +79,10 @@ function ButtonForm({ size, onClick, iconName }: ButtonFormProps): React.JSX.Ele
         cursor: 'pointer',
         padding: 0,
       }}
-      onClick={onClick}
+      //onClick={onClick}
+      onMouseDown={handleMouseDown}
+      onContextMenu={(e) => e.preventDefault()}
+      
     >
       <img
         src={icons[IconName] || icons.default}

@@ -4,6 +4,7 @@ import SaveForm from './SaveForm'
 import SaveTextInfoForm from './SaveTextInfoForm'
 import ButtonHolder from './ButtonHolder'
 import Loading from './Loading'
+import SelectTime from './SelectTime'
 
 export interface UserData {
   gameName: string
@@ -100,13 +101,7 @@ const NewBackup = (): React.JSX.Element => {
             lastBackup={userData.backupDelay}
             setUserData={setUserData}
           />
-          {/* вы отдельный комп */}
-          <ButtonHolder>
-            <ButtonForm size={50} iconName={'halfHour'} />
-            <ButtonForm size={50} iconName={'oneHour'} />
-            <ButtonForm size={50} iconName={'twelveHours'} />
-            <ButtonForm size={50} iconName={'oneMonth'} />
-          </ButtonHolder>
+          <SelectTime backupDelay={userData.backupDelay} setUserData={setUserData} />
         </div>
         {showIcons && (
           <ul
