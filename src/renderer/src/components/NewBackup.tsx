@@ -96,6 +96,7 @@ const NewBackup = (): React.JSX.Element => {
         />
         <div style={styles.formHolder}>
           <SaveTextInfoForm
+            key={userData.backupDelay}
             disableEdit={false}
             savePath={userData.gamePath}
             lastBackup={userData.backupDelay}

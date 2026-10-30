@@ -41,7 +41,7 @@ const SaveFile = ({ gameName, savePath, lastBackup }: SaveFileProps): React.JSX.
       return //await window.api.backupUploader(gameName, savePath)
     },
     onSuccess: () => {
-      console.log(`Backup created successfuly for ${gameName}`)
+      //console.log(`Backup created successfuly for ${gameName}`)
       refetch()
     },
     onError: (err) => {

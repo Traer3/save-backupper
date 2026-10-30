@@ -1,9 +1,10 @@
+import React, { useState } from 'react'
 import ButtonForm from './ButtonForm'
 import { UserData } from './NewBackup'
 
 interface SaveTextInfoFormProps {
   savePath?: string
-  lastBackup?: string
+  lastBackup: string
   disableEdit: boolean
   setUserData?: React.Dispatch<React.SetStateAction<UserData>>
 }
@@ -15,6 +16,21 @@ export default function SaveTextInfoForm({
   //setSavePath,
   setUserData
 }: SaveTextInfoFormProps): React.JSX.Element {
+  const [backupDelayInput, setBackupDelayInput] = useState<string>(lastBackup)
+
+  const handleBackupDelayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setBackupDelayInput(e.target.value)
+  }
+  const handleBlur = (): void => {
+    if (disableEdit || !setUserData) return
+    const numericValue = Number(backupDelayInput)
+    const validTime = isNaN(numericValue) || numericValue < 300 ? 300 : numericValue
+    const stringTime = String(validTime)
+    setUserData((prev) => ({
+      ...prev,
+      backupDelay: stringTime
+    }))
+  }
   const changePath = (value: string): void => {
     if (disableEdit || !setUserData) return
     // тут еще ебнутее , строка не должны быть пустой и должна быть системной
@@ -24,14 +40,30 @@ export default function SaveTextInfoForm({
     }))
   }
 
-  const changeDelay = (value: string): void => {
-    if (disableEdit || !setUserData) return
-    //конечный value должен быть в секундах
-    setUserData((prev) => ({
-      ...prev,
-      backupDelay: value
-    }))
+  const dateFormatter = new Intl.DateTimeFormat('ru-Ru',{
+    second:'2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit'
+  })
+
+  const getFormattedDate = (time: string): string => {
+    const numericValue = Number(time)
+    const date = new Date(numericValue * 1000)
+    return dateFormatter.format(date)
   }
+  // const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+  //       day: '2-digit',
+  //       month: '2-digit',
+  //       year: '2-digit'
+  //   })
+  //   function getFormattedDate(ts) {
+  //       const date = (ts !== undefined && ts !== null)
+  //           ? new Date(ts * 1000)
+  //           : new Date();
+  //       return dateFormatter.format(date)
+  //   }
+
   return (
     <>
       <div title={savePath} style={styles.folderPosition}>
@@ -46,9 +78,11 @@ export default function SaveTextInfoForm({
       </div>
       <input
         disabled={disableEdit}
+        value={getFormattedDate(backupDelayInput)}
         placeholder={lastBackup}
         style={{ ...styles.textStyle, alignItems: 'center', display: 'flex' }}
-        onChange={(e) => changeDelay(e.target.value)}
+        onChange={handleBackupDelayChange}
+        onBlur={handleBlur}
       />
     </>
   )
