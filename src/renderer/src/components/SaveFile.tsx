@@ -8,15 +8,15 @@ import Loading from './Loading'
 interface SaveFileProps {
   gameName: string
   savePath: string
-  lastBackup?: string
+  backupDelay?: string
 }
 
-const SaveFile = ({ gameName, savePath, lastBackup }: SaveFileProps): React.JSX.Element => {
+const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX.Element => {
   const [showExtra, setShowExtra] = useState(false)
-  const intervalHours = 2282222222
+
   const getRemainingSeconds = (lastBackupTime: string): number => {
     const lastBackupMs = new Date(lastBackupTime).getTime()
-    const intervalMs = intervalHours * 60 * 60 * 1000
+    const intervalMs = Number(backupDelay)
     const nextBackupMs = lastBackupMs + intervalMs
 
     const diffInSeconds = Math.floor((nextBackupMs - Date.now()) / 1000)
@@ -29,9 +29,12 @@ const SaveFile = ({ gameName, savePath, lastBackup }: SaveFileProps): React.JSX.
     error,
     refetch
   } = useQuery({
-    queryKey: ['lastBackupInfo', gameName, intervalHours],
+    queryKey: ['lastBackupInfo', gameName, backupDelay],
     queryFn: async () => {
-      const createdTimeIso = await window.api.getLastItemInfo<string>('DarkSouls II') //'DarkSouls II' заменить на gameName
+      const createdTimeIso = await window.api
+        .getLastItemInfo<string>(gameName)
+        .catch((err) => console.log(err))
+      if (!createdTimeIso) return getRemainingSeconds('0')
       return getRemainingSeconds(createdTimeIso)
     }
   })
@@ -59,9 +62,13 @@ const SaveFile = ({ gameName, savePath, lastBackup }: SaveFileProps): React.JSX.
     <Loading loading={isBackingUp || isLoading}>
       <>
         <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo}>
-          <TimerForm key={secondsLeft} initialSeconds={secondsLeft} onComplete={createBackup} />
+          <TimerForm
+            key={secondsLeft}
+            initialSeconds={secondsLeft}
+            onComplete={() => console.log('Complete )')} //createBackup
+          />
         </SaveForm>
-        {showExtra && <SaveInfoForm savePath={savePath} lastBackup={lastBackup} />}
+        {showExtra && <SaveInfoForm savePath={savePath} backupDelay={backupDelay} />}
       </>
     </Loading>
   )

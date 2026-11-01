@@ -4,13 +4,13 @@ import SaveTextInfoForm from './SaveTextInfoForm'
 
 type SaveInfoFormProps = {
   savePath?: string
-  lastBackup?: string // потом ебануть timestamp
+  backupDelay?: string // потом ебануть timestamp
 }
 
-const SaveInfoForm = ({ savePath, lastBackup }: SaveInfoFormProps): React.JSX.Element => {
+const SaveInfoForm = ({ savePath, backupDelay }: SaveInfoFormProps): React.JSX.Element => {
   return (
     <div style={styles.mainBody}>
-      <SaveTextInfoForm disableEdit={true} savePath={savePath} lastBackup={lastBackup} />
+      <SaveTextInfoForm disableEdit={true} savePath={savePath} backupDelay={backupDelay} />
       <div>
         <ButtonHolder>
           <ButtonForm size={30} iconName="start" />

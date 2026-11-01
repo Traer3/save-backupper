@@ -1,22 +1,24 @@
 import React, { useState } from 'react'
 import ButtonForm from './ButtonForm'
 import { UserData } from './NewBackup'
+import { getFormattedData } from './FormatTime'
+import InputForm from './InputForm'
 
 interface SaveTextInfoFormProps {
   savePath?: string
-  lastBackup: string
+  backupDelay?: string
   disableEdit: boolean
   setUserData?: React.Dispatch<React.SetStateAction<UserData>>
 }
 
 export default function SaveTextInfoForm({
   savePath,
-  lastBackup,
+  backupDelay,
   disableEdit,
   //setSavePath,
   setUserData
 }: SaveTextInfoFormProps): React.JSX.Element {
-  const [backupDelayInput, setBackupDelayInput] = useState<string>(lastBackup)
+  const [backupDelayInput, setBackupDelayInput] = useState<string>(backupDelay || '0')
 
   const handleBackupDelayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setBackupDelayInput(e.target.value)
@@ -40,50 +42,54 @@ export default function SaveTextInfoForm({
     }))
   }
 
-  const dateFormatter = new Intl.DateTimeFormat('ru-Ru', {
-    second: '2-digit',
-    minute: '2-digit',
-    day: '2-digit',
-    month: '2-digit'
-  })
-
-  const getFormattedDate = (time: string): string => {
-    const numericValue = Number(time)
-    const date = new Date(numericValue * 1000)
-    return dateFormatter.format(date)
-  }
-  // const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
-  //       day: '2-digit',
-  //       month: '2-digit',
-  //       year: '2-digit'
-  //   })
-  //   function getFormattedDate(ts) {
-  //       const date = (ts !== undefined && ts !== null)
-  //           ? new Date(ts * 1000)
-  //           : new Date();
-  //       return dateFormatter.format(date)
-  //   }
-
   return (
     <>
       <div title={savePath} style={styles.folderPosition}>
-        <input
+        <InputForm
+          disabled={disableEdit}
+          placeholder={savePath}
+          onChange={(e) => changePath(e.target.value)}
+        />
+        {/* <input
           disabled={disableEdit}
           //value={savePath}
           placeholder={savePath}
           style={styles.textStyle}
           onChange={(e) => changePath(e.target.value)}
-        />
+        /> */}
         <ButtonForm size={25} iconName="folder" />
       </div>
-      <input
-        disabled={disableEdit}
-        value={getFormattedDate(backupDelayInput)}
-        placeholder={lastBackup}
-        style={{ ...styles.textStyle, alignItems: 'center', display: 'flex' }}
-        onChange={handleBackupDelayChange}
-        onBlur={handleBlur}
-      />
+      {disableEdit ? (
+        <InputForm
+          disabled={true}
+          title={getFormattedData(backupDelayInput)}
+          value={getFormattedData(backupDelayInput)}
+          extraStyles={{ alignItems: 'center', flex: 1 }}
+        />
+        // <input
+        //   disabled={true}
+        //   title={getFormattedData(backupDelayInput)}
+        //   value={getFormattedData(backupDelayInput)}
+        //   style={{ ...styles.textStyle, alignItems: 'center', flex: 1 }}
+        // />
+      ) : (
+        <div style={{ display: 'flex', gap: 2 }}>
+          <input
+            disabled={disableEdit}
+            value={backupDelayInput}
+            placeholder={backupDelay}
+            style={{ ...styles.textStyle, alignItems: 'center', flex: 2 }}
+            onChange={handleBackupDelayChange}
+            onBlur={handleBlur}
+          />
+          <input
+            disabled={true}
+            title={getFormattedData(backupDelayInput)}
+            value={getFormattedData(backupDelayInput)}
+            style={{ ...styles.textStyle, alignItems: 'center', flex: 1 }}
+          />
+        </div>
+      )}
     </>
   )
 }

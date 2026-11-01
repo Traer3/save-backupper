@@ -99,7 +99,7 @@ const NewBackup = (): React.JSX.Element => {
             key={userData.backupDelay}
             disableEdit={false}
             savePath={userData.gamePath}
-            lastBackup={userData.backupDelay}
+            backupDelay={userData.backupDelay}
             setUserData={setUserData}
           />
           <SelectTime backupDelay={userData.backupDelay} setUserData={setUserData} />

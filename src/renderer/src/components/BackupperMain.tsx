@@ -66,7 +66,7 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
                 <SaveFile
                   gameName={obj.gameName}
                   savePath={obj.gamePath}
-                  lastBackup={obj.backupDelay}
+                  backupDelay={obj.backupDelay}
                 />
               </div>
             ))}
