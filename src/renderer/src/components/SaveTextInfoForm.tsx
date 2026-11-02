@@ -50,13 +50,6 @@ export default function SaveTextInfoForm({
           placeholder={savePath}
           onChange={(e) => changePath(e.target.value)}
         />
-        {/* <input
-          disabled={disableEdit}
-          //value={savePath}
-          placeholder={savePath}
-          style={styles.textStyle}
-          onChange={(e) => changePath(e.target.value)}
-        /> */}
         <ButtonForm size={25} iconName="folder" />
       </div>
       {disableEdit ? (
@@ -66,27 +59,21 @@ export default function SaveTextInfoForm({
           value={getFormattedData(backupDelayInput)}
           extraStyles={{ alignItems: 'center', flex: 1 }}
         />
-        // <input
-        //   disabled={true}
-        //   title={getFormattedData(backupDelayInput)}
-        //   value={getFormattedData(backupDelayInput)}
-        //   style={{ ...styles.textStyle, alignItems: 'center', flex: 1 }}
-        // />
       ) : (
         <div style={{ display: 'flex', gap: 2 }}>
-          <input
+          <InputForm
             disabled={disableEdit}
             value={backupDelayInput}
             placeholder={backupDelay}
-            style={{ ...styles.textStyle, alignItems: 'center', flex: 2 }}
+            extraStyles={{ alignItems: 'center', flex: 2 }}
             onChange={handleBackupDelayChange}
             onBlur={handleBlur}
           />
-          <input
+          <InputForm
             disabled={true}
             title={getFormattedData(backupDelayInput)}
             value={getFormattedData(backupDelayInput)}
-            style={{ ...styles.textStyle, alignItems: 'center', flex: 1 }}
+            extraStyles={{ alignItems: 'center', flex: 1 }}
           />
         </div>
       )}
