@@ -4,6 +4,7 @@ import SaveInfoForm from './SaveInfoForm'
 import TimerForm from './TimerForm'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import Loading from './Loading'
+import HighlightProblem from './HighlightProblem'
 
 interface SaveFileProps {
   gameName: string
@@ -57,19 +58,20 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   }
 
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
-
   return (
     <Loading loading={isBackingUp || isLoading}>
-      <>
-        <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo}>
-          <TimerForm
-            key={secondsLeft}
-            initialSeconds={secondsLeft}
-            onComplete={() => console.log('Complete )')} //createBackup
-          />
-        </SaveForm>
-        {showExtra && <SaveInfoForm savePath={savePath} backupDelay={backupDelay} />}
-      </>
+      <HighlightProblem isProblem={!isBackingUp && !isLoading && secondsLeft === 0}>
+        <>
+          <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo}>
+            <TimerForm
+              key={secondsLeft}
+              initialSeconds={secondsLeft}
+              onComplete={() => {}} //createBackup
+            />
+          </SaveForm>
+          {showExtra && <SaveInfoForm savePath={savePath} backupDelay={backupDelay} />}
+        </>
+      </HighlightProblem>
     </Loading>
   )
 }

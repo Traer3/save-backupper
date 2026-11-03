@@ -5,6 +5,7 @@ import SaveTextInfoForm from './SaveTextInfoForm'
 import ButtonHolder from './ButtonHolder'
 import Loading from './Loading'
 import SelectTime from './SelectTime'
+import { useQueryClient } from '@tanstack/react-query'
 
 export interface UserData {
   gameName: string
@@ -13,6 +14,7 @@ export interface UserData {
 }
 
 const NewBackup = (): React.JSX.Element => {
+  const queryClient = useQueryClient()
   const [userData, setUserData] = useState<UserData>({
     gameName: 'DarkSouls II',
     gamePath: 'save path',
@@ -57,7 +59,8 @@ const NewBackup = (): React.JSX.Element => {
     setLoading(true)
     console.log('save path : ', userData.gamePath)
     //const response = await onTriggerSave(userData.gamePath)
-    await writeInfo()
+    await writeInfo() 
+    await handleRefresh()
     //console.log('response: ', response)
   }
 
@@ -82,6 +85,12 @@ const NewBackup = (): React.JSX.Element => {
 
   const onCancel = (): void | null => {
     return console.log('test', userData)
+  }
+
+  const handleRefresh = async (): Promise<void> => {
+    await queryClient.invalidateQueries({
+      queryKey: ['userData']
+    })
   }
 
   return (

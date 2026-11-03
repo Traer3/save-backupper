@@ -21,17 +21,31 @@ export default function SaveTextInfoForm({
   const [backupDelayInput, setBackupDelayInput] = useState<string>(backupDelay || '0')
 
   const handleBackupDelayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setBackupDelayInput(e.target.value)
+    const value = e.target.value
+    setBackupDelayInput(value)
+    if (disableEdit || !setUserData) return
+    const numericValue = Number(value)
+    if (value.trim() === '' || isNaN(numericValue)) return
+    const validTime = numericValue < 300 ? 300 : numericValue
+    setUserData((prev) => {
+      if (prev.backupDelay === String(validTime)) return prev
+      return {
+        ...prev,
+        backupDelay: String(validTime)
+      }
+    })
   }
   const handleBlur = (): void => {
-    if (disableEdit || !setUserData) return
+    if (disableEdit) return
     const numericValue = Number(backupDelayInput)
     const validTime = isNaN(numericValue) || numericValue < 300 ? 300 : numericValue
-    const stringTime = String(validTime)
-    setUserData((prev) => ({
-      ...prev,
-      backupDelay: stringTime
-    }))
+    setBackupDelayInput(String(validTime))
+    if (setUserData) {
+      setUserData((prev) => ({
+        ...prev,
+        backupDelay: String(validTime)
+      }))
+    }
   }
   const changePath = (value: string): void => {
     if (disableEdit || !setUserData) return

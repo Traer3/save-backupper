@@ -81,7 +81,7 @@ export class DriverService {
 
     const files = searchResponse.data.files
     if (files && files.length > 0 && files[0].id) {
-      console.log(`Found existing ${this.FOLDER_NAME}: ${files[0].id}`)
+      //console.log(`Found existing ${this.FOLDER_NAME}: ${files[0].id}`)
       return files[0].id
     }
 
