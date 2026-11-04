@@ -59,7 +59,7 @@ const NewBackup = (): React.JSX.Element => {
     setLoading(true)
     console.log('save path : ', userData.gamePath)
     //const response = await onTriggerSave(userData.gamePath)
-    await writeInfo() 
+    await writeInfo()
     await handleRefresh()
     //console.log('response: ', response)
   }
@@ -78,7 +78,7 @@ const NewBackup = (): React.JSX.Element => {
   const writeInfo = async (): Promise<void> => {
     if (userData.backupDelay === '0') throw new Error(`Im not that fast`)
 
-    const newFormat = JSON.stringify(userData)
+    const newFormat = JSON.stringify(userData) // добавить сюда валидацию времени инпута минимум 300
     await window.api.changeUserData(newFormat)
     setLoading(false)
   }

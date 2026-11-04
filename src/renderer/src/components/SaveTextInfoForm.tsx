@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ButtonForm from './ButtonForm'
 import { UserData } from './NewBackup'
 import { getFormattedData } from './FormatTime'
 import InputForm from './InputForm'
+import { useDebounce } from '@renderer/useDebounce'
 
 interface SaveTextInfoFormProps {
   savePath?: string
@@ -19,26 +20,35 @@ export default function SaveTextInfoForm({
   setUserData
 }: SaveTextInfoFormProps): React.JSX.Element {
   const [backupDelayInput, setBackupDelayInput] = useState<string>(backupDelay || '0')
+  const debouncedBackupDelay = useDebounce<string>(backupDelayInput, 500)
 
-  const handleBackupDelayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const value = e.target.value
-    setBackupDelayInput(value)
-    if (disableEdit || !setUserData) return
+  const timeFormat = (value: string): string => {
     const numericValue = Number(value)
-    if (value.trim() === '' || isNaN(numericValue)) return
-    const validTime = numericValue < 300 ? 300 : numericValue
+    const validTime = isNaN(numericValue) || numericValue < 300 ? 300 : numericValue
+    return String(validTime)
+  }
+
+  useEffect(() => {
+    if (disableEdit || !setUserData) return
+    if (debouncedBackupDelay.trim() === '' || isNaN(Number(debouncedBackupDelay))) return
+
+    const validTime = timeFormat(debouncedBackupDelay)
+
     setUserData((prev) => {
-      if (prev.backupDelay === String(validTime)) return prev
+      if (prev.backupDelay === validTime) return prev
       return {
         ...prev,
-        backupDelay: String(validTime)
+        backupDelay: validTime
       }
     })
+  }, [debouncedBackupDelay, disableEdit, setUserData])
+
+  const handleBackupDelayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setBackupDelayInput(e.target.value)
   }
   const handleBlur = (): void => {
     if (disableEdit) return
-    const numericValue = Number(backupDelayInput)
-    const validTime = isNaN(numericValue) || numericValue < 300 ? 300 : numericValue
+    const validTime = timeFormat(backupDelayInput)
     setBackupDelayInput(String(validTime))
     if (setUserData) {
       setUserData((prev) => ({

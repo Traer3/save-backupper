@@ -16,10 +16,16 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   const [showExtra, setShowExtra] = useState(false)
 
   const getRemainingSeconds = (lastBackupTime: string): number => {
+    const delayInSeconds = Number(backupDelay) || 0
+    if (!lastBackupTime || lastBackupTime === '0') {
+      return delayInSeconds
+    }
     const lastBackupMs = new Date(lastBackupTime).getTime()
-    const intervalMs = Number(backupDelay)
-    const nextBackupMs = lastBackupMs + intervalMs
+    if (isNaN(lastBackupMs)) {
+      return delayInSeconds
+    }
 
+    const nextBackupMs = lastBackupMs + delayInSeconds * 1000
     const diffInSeconds = Math.floor((nextBackupMs - Date.now()) / 1000)
     return diffInSeconds > 0 ? diffInSeconds : 0
   }
