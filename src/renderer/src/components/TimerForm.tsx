@@ -3,26 +3,44 @@ import { getFormattedData } from './FormatTime'
 
 interface TimerFormProps {
   // на будущее передавать не сами секунды , а конечное время через Date.now() без проеба
+  backupComplet?: boolean
   initialSeconds: number
+  isBackingUp?: boolean
   onComplete?: () => void
 }
 
-const TimerForm = ({ initialSeconds, onComplete }: TimerFormProps): React.JSX.Element => {
-  const [timeLeft, setTimeLeft] = useState<number>(initialSeconds)
-  const [prevInitialSeconds, setPrevInitalSeconds] = useState<number>(initialSeconds)
+const DELAY_FOR_MISSED_BACKUP = 20
 
+const TimerForm = ({
+  initialSeconds,
+  onComplete,
+  isBackingUp,
+  backupComplet
+}: TimerFormProps): React.JSX.Element => {
+  const startingSeconds = initialSeconds <= 0 ? DELAY_FOR_MISSED_BACKUP : initialSeconds
+  const [timeLeft, setTimeLeft] = useState<number>(startingSeconds)
+  const [prevInitialSeconds, setPrevInitalSeconds] = useState<number>(initialSeconds)
+  const [hasTriggered, setHasTriggered] = useState<boolean>(false)
+  //const hasTriggered = useRef<boolean>(false)
+  
   if (initialSeconds !== prevInitialSeconds) {
     setPrevInitalSeconds(initialSeconds)
-    setTimeLeft(initialSeconds)
+    setTimeLeft(initialSeconds <= 0 ? DELAY_FOR_MISSED_BACKUP : initialSeconds)
+    setHasTriggered(false)
   }
+
   useEffect(() => {
+    //console.log("isBackingUp: ", isBackingUp)
+    if (backupComplet) return
+    if (isBackingUp || hasTriggered) return
     if (timeLeft <= 0) {
-      if (onComplete) onComplete()
+      console.log('start function')
+      onComplete?.()
       return
     }
 
     const timerId = setInterval(() => {
-      setTimeLeft((prevTime) => prevTime - 1)
+      setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1))
     }, 1000)
 
     return () => clearInterval(timerId)
@@ -30,7 +48,11 @@ const TimerForm = ({ initialSeconds, onComplete }: TimerFormProps): React.JSX.El
 
   return (
     <div style={styles.mainBody}>
-      <span title={`${getFormattedData(timeLeft)}`}>{getFormattedData(timeLeft)}</span>
+      {/* придумать тикающюю хуйню с бэкапом */}
+
+      <span title={`${getFormattedData(timeLeft)}`}>
+        {isBackingUp ? 'Backup...' : getFormattedData(timeLeft)}
+      </span>
     </div>
   )
 }

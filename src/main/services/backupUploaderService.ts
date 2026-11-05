@@ -18,8 +18,9 @@ export class BackupUploaderService {
   }
 
   async uploadBackup(folderPath: string, folderName: string): Promise<boolean> {
-    const archiveFileName = `${folderName}.zip`
     const cleanPath = path.normalize(folderPath)
+    const actualFolderName = path.basename(cleanPath)
+    const archiveFileName = `${actualFolderName}.zip`
     const tempZipPath = path.join(os.tmpdir(), archiveFileName)
     try {
       await archiveServise.createZipArchive(cleanPath, tempZipPath)

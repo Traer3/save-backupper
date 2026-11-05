@@ -5,6 +5,7 @@ import TimerForm from './TimerForm'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import Loading from './Loading'
 import HighlightProblem from './HighlightProblem'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface SaveFileProps {
   gameName: string
@@ -13,7 +14,11 @@ interface SaveFileProps {
 }
 
 const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX.Element => {
+  
+  const queryClient = useQueryClient()
   const [showExtra, setShowExtra] = useState(false)
+  //const [isBackingUp, setIsBackingUp] = useState(false)
+  const [backupComplet, setBackupComplite] = useState<boolean>(false)
 
   const getRemainingSeconds = (lastBackupTime: string): number => {
     const delayInSeconds = Number(backupDelay) || 0
@@ -41,6 +46,7 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
       const createdTimeIso = await window.api
         .getLastItemInfo<string>(gameName)
         .catch((err) => console.log(err))
+        console.log("gameName: ", gameName, "createdTimeIso: ", createdTimeIso)
       if (!createdTimeIso) return getRemainingSeconds('0')
       return getRemainingSeconds(createdTimeIso)
     }
@@ -48,10 +54,21 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
 
   const { mutate: createBackup, isPending: isBackingUp } = useMutation({
     mutationFn: async () => {
-      return //await window.api.backupUploader(gameName, savePath)
+      
+      const res = await window.api.backupUploader(savePath, gameName)
+      if (res) {
+        await queryClient.invalidateQueries({
+          queryKey: ['userData']
+        })
+        setBackupComplite(res as boolean)
+      }
+
+      console.log('res: ', res)
+      return res
     },
     onSuccess: () => {
-      //console.log(`Backup created successfuly for ${gameName}`)
+      //console.log("backup complet")
+      console.log(`Backup created successfuly for ${gameName}`)
       refetch()
     },
     onError: (err) => {
@@ -62,7 +79,7 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   const showExtraInfo = (): void => {
     setShowExtra(!showExtra)
   }
-
+  console.log("gameName: ", gameName, "isBackingUp: ", isBackingUp, "isLoading:" , isLoading, "secondsLeft: ", secondsLeft)
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
   return (
     <Loading loading={isBackingUp || isLoading}>
@@ -70,9 +87,11 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
         <>
           <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo}>
             <TimerForm
-              key={secondsLeft}
+              //key={gameName}
+              backupComplet={backupComplet}
+              isBackingUp={isBackingUp}
               initialSeconds={secondsLeft}
-              onComplete={() => {}} //createBackup
+              onComplete={createBackup} //createBackup
             />
           </SaveForm>
           {showExtra && <SaveInfoForm savePath={savePath} backupDelay={backupDelay} />}
