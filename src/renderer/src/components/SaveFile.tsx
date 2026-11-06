@@ -14,7 +14,6 @@ interface SaveFileProps {
 }
 
 const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX.Element => {
-  
   const queryClient = useQueryClient()
   const [showExtra, setShowExtra] = useState(false)
   //const [isBackingUp, setIsBackingUp] = useState(false)
@@ -46,7 +45,7 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
       const createdTimeIso = await window.api
         .getLastItemInfo<string>(gameName)
         .catch((err) => console.log(err))
-        console.log("gameName: ", gameName, "createdTimeIso: ", createdTimeIso)
+      console.log('gameName: ', gameName, 'createdTimeIso: ', createdTimeIso)
       if (!createdTimeIso) return getRemainingSeconds('0')
       return getRemainingSeconds(createdTimeIso)
     }
@@ -54,7 +53,6 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
 
   const { mutate: createBackup, isPending: isBackingUp } = useMutation({
     mutationFn: async () => {
-      
       const res = await window.api.backupUploader(savePath, gameName)
       if (res) {
         await queryClient.invalidateQueries({
@@ -79,7 +77,16 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   const showExtraInfo = (): void => {
     setShowExtra(!showExtra)
   }
-  console.log("gameName: ", gameName, "isBackingUp: ", isBackingUp, "isLoading:" , isLoading, "secondsLeft: ", secondsLeft)
+  console.log(
+    'gameName: ',
+    gameName,
+    'isBackingUp: ',
+    isBackingUp,
+    'isLoading:',
+    isLoading,
+    'secondsLeft: ',
+    secondsLeft
+  )
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
   return (
     <Loading loading={isBackingUp || isLoading}>
