@@ -22,7 +22,7 @@ const TimerForm = ({
   const [prevInitialSeconds, setPrevInitalSeconds] = useState<number>(initialSeconds)
   const [hasTriggered, setHasTriggered] = useState<boolean>(false)
   //const hasTriggered = useRef<boolean>(false)
-  
+
   if (initialSeconds !== prevInitialSeconds) {
     setPrevInitalSeconds(initialSeconds)
     setTimeLeft(initialSeconds <= 0 ? DELAY_FOR_MISSED_BACKUP : initialSeconds)
