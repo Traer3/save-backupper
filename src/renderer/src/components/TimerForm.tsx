@@ -49,7 +49,7 @@ const TimerForm = ({
   return (
     <div style={styles.mainBody}>
       {/* придумать тикающюю хуйню с бэкапом */}
-
+ 
       <span title={`${getFormattedData(timeLeft)}`}>
         {isBackingUp ? 'Backup...' : getFormattedData(timeLeft)}
       </span>
