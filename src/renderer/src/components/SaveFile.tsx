@@ -20,6 +20,7 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   const [backupComplet, setBackupComplite] = useState<boolean>(false)
 
   const getRemainingSeconds = (lastBackupTime: string): number => {
+    console.log('gameName: ', gameName, 'lastBackupTime:', lastBackupTime) //2026-10-20T16:52:33.898Z
     const delayInSeconds = Number(backupDelay) || 0
     if (!lastBackupTime || lastBackupTime === '0') {
       return delayInSeconds
@@ -77,16 +78,16 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   const showExtraInfo = (): void => {
     setShowExtra(!showExtra)
   }
-  console.log(
-    'gameName: ',
-    gameName,
-    'isBackingUp: ',
-    isBackingUp,
-    'isLoading:',
-    isLoading,
-    'secondsLeft: ',
-    secondsLeft
-  )
+  // console.log(
+  //   'gameName: ',
+  //   gameName,
+  //   'isBackingUp: ',
+  //   isBackingUp,
+  //   'isLoading:',
+  //   isLoading,
+  //   'secondsLeft: ',
+  //   secondsLeft
+  // )
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
   return (
     <Loading loading={isBackingUp || isLoading}>
@@ -98,7 +99,7 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
               backupComplet={backupComplet}
               isBackingUp={isBackingUp}
               initialSeconds={secondsLeft}
-              onComplete={createBackup} //createBackup
+              onComplete={() => console.log('Complete')} //createBackup
             />
           </SaveForm>
           {showExtra && <SaveInfoForm savePath={savePath} backupDelay={backupDelay} />}
