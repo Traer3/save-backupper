@@ -13,44 +13,50 @@ interface SaveFileProps {
   backupDelay?: string
 }
 
+const calculateRemainingSeconds = (
+  lastBackupTime: string | null | undefined,
+  delayStr?: string
+): number => {
+  // console.log('lastBackupTime: ', lastBackupTime)
+  // console.log('delayStr: ', delayStr)
+  const delayInSeconds = Number(delayStr) || 0
+  if (!lastBackupTime || lastBackupTime === '0') {
+    return delayInSeconds
+  }
+  const lastBackupMs = new Date(lastBackupTime).getTime()
+  if (isNaN(lastBackupMs)) {
+    return delayInSeconds
+  }
+
+  const nextBackupMs = lastBackupMs + delayInSeconds * 1000
+  const diffInSeconds = Math.floor((nextBackupMs - Date.now()) / 1000)
+  return diffInSeconds > 0 ? diffInSeconds : 0
+}
+
 const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX.Element => {
   const queryClient = useQueryClient()
   const [showExtra, setShowExtra] = useState(false)
   //const [isBackingUp, setIsBackingUp] = useState(false)
   const [backupComplet, setBackupComplite] = useState<boolean>(false)
 
-  const getRemainingSeconds = (lastBackupTime: string): number => {
-    console.log('gameName: ', gameName, 'lastBackupTime:', lastBackupTime) //2026-10-20T16:52:33.898Z
-    const delayInSeconds = Number(backupDelay) || 0
-    if (!lastBackupTime || lastBackupTime === '0') {
-      return delayInSeconds
-    }
-    const lastBackupMs = new Date(lastBackupTime).getTime()
-    if (isNaN(lastBackupMs)) {
-      return delayInSeconds
-    }
-
-    const nextBackupMs = lastBackupMs + delayInSeconds * 1000
-    const diffInSeconds = Math.floor((nextBackupMs - Date.now()) / 1000)
-    return diffInSeconds > 0 ? diffInSeconds : 0
-  }
   const {
-    data: secondsLeft = 0,
+    data: createdTimeIso,
     isLoading,
     isError,
     error,
     refetch
   } = useQuery({
-    queryKey: ['lastBackupInfo', gameName, backupDelay],
+    queryKey: ['lastBackupInfo', gameName],
     queryFn: async () => {
-      const createdTimeIso = await window.api
-        .getLastItemInfo<string>(gameName)
-        .catch((err) => console.log(err))
-      console.log('gameName: ', gameName, 'createdTimeIso: ', createdTimeIso)
-      if (!createdTimeIso) return getRemainingSeconds('0')
-      return getRemainingSeconds(createdTimeIso)
+      const timeIso = await window.api.getLastItemInfo<string>(gameName).catch((err) => {
+        console.log(err)
+        return null
+      })
+      return timeIso || '0'
     }
   })
+
+  const secondsLeft = calculateRemainingSeconds(createdTimeIso, backupDelay)
 
   const { mutate: createBackup, isPending: isBackingUp } = useMutation({
     mutationFn: async () => {
@@ -88,7 +94,9 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   //   'secondsLeft: ',
   //   secondsLeft
   // )
+  if (isError) console.log('Error: ', isError)
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
+
   return (
     <Loading loading={isBackingUp || isLoading}>
       <HighlightProblem isProblem={!isBackingUp && !isLoading && secondsLeft === 0}>
@@ -99,7 +107,7 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
               backupComplet={backupComplet}
               isBackingUp={isBackingUp}
               initialSeconds={secondsLeft}
-              onComplete={() => console.log('Complete')} //createBackup
+              onComplete={createBackup} //createBackup
             />
           </SaveForm>
           {showExtra && <SaveInfoForm savePath={savePath} backupDelay={backupDelay} />}

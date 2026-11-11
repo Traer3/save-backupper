@@ -13,12 +13,11 @@ export class GetInfoService {
   async getLastItemTime(folderName: string): Promise<string> {
     const info = await this.getSubFolderInfo(folderName) //createdTime
     //if (!info || info.length === 0) throw new Error(`Folder ${folderName} is empty`)
-    const lastItemTime = info[info.length - 1]?.createdTime
-    if (!lastItemTime) {
+    if (!info || info.length === 0) {
       return '0'
     }
-
-    return lastItemTime
+    const lastItemTime = info[0]?.createdTime
+    return lastItemTime || '0'
   }
 }
 

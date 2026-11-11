@@ -24,7 +24,7 @@ export default function SaveTextInfoForm({
 
   const timeFormat = (value: string): string => {
     const numericValue = Number(value)
-    const validTime = isNaN(numericValue) || numericValue < 300 ? 300 : numericValue
+    const validTime = isNaN(numericValue) || numericValue < 20 ? 20 : numericValue //numericValue < 300 ? 300 : numericValue
     return String(validTime)
   }
 
