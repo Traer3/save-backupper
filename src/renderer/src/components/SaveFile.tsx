@@ -38,6 +38,7 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   const [showExtra, setShowExtra] = useState(false)
   //const [isBackingUp, setIsBackingUp] = useState(false)
   const [backupComplet, setBackupComplite] = useState<boolean>(false)
+  const [trigeredError, setTrigeredError] = useState<string>('')
 
   const {
     data: createdTimeIso,
@@ -60,24 +61,21 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
 
   const { mutate: createBackup, isPending: isBackingUp } = useMutation({
     mutationFn: async () => {
-      const res = await window.api.backupUploader(savePath, gameName)
-      if (res) {
-        await queryClient.invalidateQueries({
-          queryKey: ['userData']
-        })
-        setBackupComplite(res as boolean)
-      }
-
-      console.log('res: ', res)
-      return res
+      return await window.api.backupUploader(savePath, gameName)
     },
-    onSuccess: () => {
-      //console.log("backup complet")
+    onSuccess: async () => {
       console.log(`Backup created successfuly for ${gameName}`)
+      setBackupComplite(true)
+      await queryClient.invalidateQueries({
+        queryKey: ['userData']
+      })
       refetch()
     },
     onError: (err) => {
       console.log(`Failed to create backup for ${gameName}: `, err)
+      setTrigeredError(err.message)
+      setBackupComplite(true) //мне не нужен false мне нужно отправлять
+      //придумать вывод
     }
   })
 
@@ -94,12 +92,16 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
   //   'secondsLeft: ',
   //   secondsLeft
   // )
-  if (isError) console.log('Error: ', isError)
+  //if (isError) console.log('Error: ', isError)
+  console.log('trigeredError: ', trigeredError)
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
 
   return (
     <Loading loading={isBackingUp || isLoading}>
-      <HighlightProblem isProblem={!isBackingUp && !isLoading && secondsLeft === 0}>
+      <HighlightProblem
+        isProblem={trigeredError.length > 0 || (!isBackingUp && !isLoading && secondsLeft === 0)}
+        problem={trigeredError}
+      >
         <>
           <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo}>
             <TimerForm

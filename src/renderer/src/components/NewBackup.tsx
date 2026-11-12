@@ -17,7 +17,7 @@ const NewBackup = (): React.JSX.Element => {
   const queryClient = useQueryClient()
   const [userData, setUserData] = useState<UserData>({
     gameName: 'DarkSouls II',
-    gamePath: 'save path',
+    gamePath: 'C:\\Users\\traer\\AppData\\Roaming\\DarkSoulsII',
     backupDelay: '43200' //0
   })
   const [showIcons, setShowIcons] = useState(false)
@@ -64,16 +64,16 @@ const NewBackup = (): React.JSX.Element => {
     //console.log('response: ', response)
   }
 
-  // const onTriggerSave = async (savePath: string): Promise<boolean> => {
-  //   try {
-  //     const response = await window.api.backupUploader<boolean>(savePath, userData.gameName)
-  //     setLoading(!response)
-  //     return response
-  //   } catch (err) {
-  //     console.log(`Error in OnTriggerSave:\n${err}`)
-  //     return false
-  //   }
-  // }
+  const onTriggerSave = async (savePath: string): Promise<boolean> => {
+    try {
+      const response = await window.api.backupUploader<boolean>(savePath, userData.gameName)
+      setLoading(!response)
+      return response
+    } catch (err) {
+      console.log(`Error in OnTriggerSave:\n${err}`)
+      return false
+    }
+  }
 
   const writeInfo = async (): Promise<void> => {
     if (userData.backupDelay === '0') throw new Error(`Im not that fast`)

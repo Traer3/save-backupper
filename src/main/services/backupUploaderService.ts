@@ -17,7 +17,7 @@ export class BackupUploaderService {
     }
   }
 
-  async uploadBackup(folderPath: string, folderName: string): Promise<boolean> {
+  async uploadBackup(folderPath: string, folderName: string): Promise<void> {
     const cleanPath = path.normalize(folderPath)
     const actualFolderName = path.basename(cleanPath)
     const archiveFileName = `${actualFolderName}.zip`
@@ -27,16 +27,12 @@ export class BackupUploaderService {
       const mainFolderId = await driverSerivice.getOrCreateAppFolder()
       const backupFolderId = await driverSerivice.createSubFolder(mainFolderId, folderName)
       await this.deleteOldBackups(backupFolderId)
-      const driveResponse = await driverSerivice.uploadFileToFolder(
-        backupFolderId,
-        tempZipPath,
-        archiveFileName
-      )
 
-      return Boolean(driveResponse)
+      await driverSerivice.uploadFileToFolder(backupFolderId, tempZipPath, archiveFileName)
     } catch (err) {
-      console.log(`Error during backup upload pipeline: \n ${err}`)
-      return false
+      // console.log(`Error during backup upload pipeline: \n ${err}`)
+      const errMessage = err instanceof Error ? err.message : String(err)
+      throw new Error(`Failed to update backup for ${folderName}: \n ${errMessage}`)
     } finally {
       await toolsService.deleteFile(tempZipPath).catch((err) => {
         console.warn(`Could not cleanup temp file ${tempZipPath}:\n${err}`)

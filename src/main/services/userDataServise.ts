@@ -1,5 +1,6 @@
 import path from 'path'
 import { driverSerivice } from './googleDiskService'
+import { toolsService } from './toolsService'
 
 export interface UserDataEntry {
   gameName: string
@@ -10,7 +11,6 @@ export class UserDataService {
   async readDataJson(): Promise<[]> {
     const dataFileId = await driverSerivice.getOrCreateDataFile()
     const userData = await driverSerivice.readJsonFile(dataFileId)
-    //console.log('userData: ', userData)
     return userData as []
   }
 
@@ -27,7 +27,10 @@ export class UserDataService {
     const oldData = await driverSerivice.readJsonFile<UserDataEntry[]>(dataFileId)
 
     const newUserData: UserDataEntry[] = [...(oldData ?? [])]
-    const index = newUserData.findIndex((item) => item.gameName === newDataJson.gameName)
+
+    const index = newUserData.findIndex(
+      (item) => toolsService.clearStr(item.gameName) === toolsService.clearStr(newDataJson.gameName)
+    )
 
     if (index !== -1) {
       console.log(`Updating existing entry for game :${newDataJson.gameName}`)
@@ -36,7 +39,7 @@ export class UserDataService {
       console.log(`Adding new entry for game: ${newDataJson.gameName}`)
       newUserData.unshift(newDataJson)
     }
-
+    return
     await driverSerivice.updateJsonFile(dataFileId, newUserData)
     // const newUserData = [
     //   {

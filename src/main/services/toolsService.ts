@@ -70,6 +70,11 @@ export class ToolsService {
     await rm(filePath, { recursive: true })
     //console.log(`file ${filePath} : successfully deleted!`)
   }
+
+  clearStr(str: string): string {
+    if (!str) return ''
+    return str.toLocaleLowerCase().replace(/\s+/g, '')
+  }
 }
 
 export const toolsService = new ToolsService()
