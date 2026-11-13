@@ -27,7 +27,7 @@ const HighlightProblem = ({
 }: HighlightProblemProps): React.JSX.Element => {
   if (!isProblem) return <>{children}</>
   // if (isProblem) {
-  //   return <HighlightProblemFrom problem={problem}>{children}</HighlightProblemFrom>
+  //   return <HighlightProblemFrom problem={problem}>{children}</HighlightProblemFrom> 
   // }
   return (
     <div style={styles.container} className="problem-container">
