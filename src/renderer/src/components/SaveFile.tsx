@@ -17,8 +17,6 @@ const calculateRemainingSeconds = (
   lastBackupTime: string | null | undefined,
   delayStr?: string
 ): number => {
-  // console.log('lastBackupTime: ', lastBackupTime)
-  // console.log('delayStr: ', delayStr)
   const delayInSeconds = Number(delayStr) || 0
   if (!lastBackupTime || lastBackupTime === '0') {
     return delayInSeconds
@@ -36,7 +34,6 @@ const calculateRemainingSeconds = (
 const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX.Element => {
   const queryClient = useQueryClient()
   const [showExtra, setShowExtra] = useState(false)
-  //const [isBackingUp, setIsBackingUp] = useState(false)
   const [backupComplet, setBackupComplite] = useState<boolean>(false)
   const [trigeredError, setTrigeredError] = useState<string>('')
 
@@ -72,44 +69,28 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
       refetch()
     },
     onError: (err) => {
-      console.log(`Failed to create backup for ${gameName}: `, err)
       setTrigeredError(err.message)
-      setBackupComplite(true) //мне не нужен false мне нужно отправлять
-      //придумать вывод
+      setBackupComplite(true)
     }
   })
 
   const showExtraInfo = (): void => {
     setShowExtra(!showExtra)
   }
-  // console.log(
-  //   'gameName: ',
-  //   gameName,
-  //   'isBackingUp: ',
-  //   isBackingUp,
-  //   'isLoading:',
-  //   isLoading,
-  //   'secondsLeft: ',
-  //   secondsLeft
-  // )
-  //if (isError) console.log('Error: ', isError)
-  console.log('trigeredError: ', trigeredError)
+
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
+  const hasError = trigeredError.length > 0 || (!isBackingUp && !isLoading && secondsLeft === 0)
 
   return (
     <Loading loading={isBackingUp || isLoading}>
-      <HighlightProblem
-        isProblem={trigeredError.length > 0 || (!isBackingUp && !isLoading && secondsLeft === 0)}
-        problem={trigeredError}
-      >
+      <HighlightProblem isProblem={hasError} problem={trigeredError}>
         <>
-          <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo}>
+          <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo} isProblem={hasError}>
             <TimerForm
-              //key={gameName}
               backupComplet={backupComplet}
               isBackingUp={isBackingUp}
               initialSeconds={secondsLeft}
-              onComplete={createBackup} //createBackup
+              onComplete={createBackup}
             />
           </SaveForm>
           {showExtra && <SaveInfoForm savePath={savePath} backupDelay={backupDelay} />}

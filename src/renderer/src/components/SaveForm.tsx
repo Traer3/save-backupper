@@ -9,6 +9,7 @@ interface SaveFormProps {
   newBackground?: string
   disableEdit: boolean
   setUserData?: React.Dispatch<React.SetStateAction<UserData>>
+  isProblem?: boolean
 }
 const SaveForm = ({
   name,
@@ -17,7 +18,8 @@ const SaveForm = ({
   onClick,
   newBackground,
   disableEdit,
-  setUserData
+  setUserData,
+  isProblem
 }: SaveFormProps): React.JSX.Element => {
   const changeName = (value: string): void => {
     if (disableEdit || !setUserData) return
@@ -28,7 +30,7 @@ const SaveForm = ({
   }
   return (
     <li
-      title={name}
+      title={isProblem ? undefined : name}
       style={{ ...styles.mainBody, backgroundColor: newBackground ? newBackground : '#2e346ebc' }}
     >
       <div style={styles.nameInputPosition}>

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { getFormattedData } from './FormatTime'
 
 interface TimerFormProps {
-  // на будущее передавать не сами секунды , а конечное время через Date.now() без проеба
   backupComplet?: boolean
   initialSeconds: number
   isBackingUp?: boolean
@@ -21,7 +20,6 @@ const TimerForm = ({
   const [timeLeft, setTimeLeft] = useState<number>(startingSeconds)
   const [prevInitialSeconds, setPrevInitalSeconds] = useState<number>(initialSeconds)
   const [hasTriggered, setHasTriggered] = useState<boolean>(false)
-  //const hasTriggered = useRef<boolean>(false)
 
   if (initialSeconds !== prevInitialSeconds) {
     setPrevInitalSeconds(initialSeconds)
@@ -30,11 +28,10 @@ const TimerForm = ({
   }
 
   useEffect(() => {
-    //console.log("isBackingUp: ", isBackingUp)
     if (backupComplet) return
     if (isBackingUp || hasTriggered) return
     if (timeLeft <= 0) {
-      console.log('start function')
+      //console.log('start function')
       onComplete?.()
       return
     }
@@ -48,8 +45,6 @@ const TimerForm = ({
 
   return (
     <div style={styles.mainBody}>
-      {/* придумать тикающюю хуйню с бэкапом */}
-
       <span title={`${getFormattedData(timeLeft)}`}>
         {isBackingUp ? 'Backup...' : getFormattedData(timeLeft)}
       </span>
@@ -65,7 +60,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 'bold',
     fontWidth: '600',
     color: '#EBF8E7',
-    //border: '1px solid red',
     width: '27%',
     overflow: 'hidden',
     display: 'flex',
