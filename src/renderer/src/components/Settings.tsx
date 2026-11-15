@@ -40,6 +40,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    gap: 10
+    gap: 10,
+    zIndex: 101
   }
 }
