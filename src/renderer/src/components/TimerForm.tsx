@@ -41,7 +41,7 @@ const TimerForm = ({
     }, 1000)
 
     return () => clearInterval(timerId)
-  }, [timeLeft, onComplete, backupComplet, isBackingUp, hasTriggered]) 
+  }, [timeLeft, onComplete, backupComplet, isBackingUp, hasTriggered])
   return (
     <div style={styles.mainBody}>
       <span title={`${getFormattedData(timeLeft)}`}>

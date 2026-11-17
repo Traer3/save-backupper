@@ -9,7 +9,6 @@ export class BackupUploaderService {
     const backupIds = await driverSerivice.filesInSubFolder(subFolderId)
     if (backupIds && backupIds.length >= 5) {
       const idForDeletion = backupIds[backupIds.length - 1]
-      // console.log('idForDeletion: ', idForDeletion.id)
       if (idForDeletion?.id) {
         await driverSerivice.deleteInDrive(idForDeletion.id)
         // console.log(`id: ${idForDeletion} deleted!`)
