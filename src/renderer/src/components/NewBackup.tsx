@@ -6,6 +6,8 @@ import ButtonHolder from './ButtonHolder'
 import Loading from './Loading'
 import SelectTime from './SelectTime'
 import { useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
+import HighlightProblemFrom from './HighlightProblem'
 
 export interface UserData {
   gameName: string
@@ -22,7 +24,7 @@ const NewBackup = (): React.JSX.Element => {
   })
   const [showIcons, setShowIcons] = useState(false)
   const scrollRef = useRef<HTMLUListElement>(null)
-  const [loading, setLoading] = useState(false)
+  const [trigeredError, setTrigeredError] = useState<string>('')
   const iconNames = [
     'settings',
     'addCircle',
@@ -54,21 +56,9 @@ const NewBackup = (): React.JSX.Element => {
     setShowIcons(!showIcons)
   }
 
-  const onSave = async (): Promise<void | null> => {
-    if (!userData.gamePath || userData.gamePath === 'save path') return null
-    setLoading(true)
-    console.log('save path : ', userData.gamePath)
-    //const response = await onTriggerSave(userData.gamePath)
-    await writeInfo()
-    await handleRefresh()
-    //console.log('response: ', response)
-  }
-
   const onTriggerSave = async (savePath: string): Promise<boolean> => {
     try {
-      const response = await window.api.backupUploader<boolean>(savePath, userData.gameName)
-      setLoading(!response)
-      return response
+      return await window.api.backupUploader<boolean>(savePath, userData.gameName)
     } catch (err) {
       console.log(`Error in OnTriggerSave:\n${err}`)
       return false
@@ -77,64 +67,77 @@ const NewBackup = (): React.JSX.Element => {
 
   const writeInfo = async (): Promise<void> => {
     if (userData.backupDelay === '0') throw new Error(`Im not that fast`)
-
     const newFormat = JSON.stringify(userData) // добавить сюда валидацию времени инпута минимум 300
     await window.api.changeUserData(newFormat)
-    setLoading(false)
   }
+
+  const { mutate: onSave, isPending: isLoading } = useMutation({
+    mutationFn: async () => {
+      if (!userData.gamePath || userData.gamePath === 'save path') return null
+      console.log('save path : ', userData.gamePath)
+      await writeInfo()
+      return await onTriggerSave(userData.gamePath)
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['userData']
+      })
+    },
+    onError: (err) => {
+      setTrigeredError(err.message)
+    }
+  })
 
   const onCancel = (): void | null => {
     return console.log('test', userData)
   }
 
-  const handleRefresh = async (): Promise<void> => {
-    await queryClient.invalidateQueries({
-      queryKey: ['userData']
-    })
-  }
+  const hasError = trigeredError.length > 0
 
   return (
     <div className="non-draggable" style={styles.mainBody}>
-      <Loading loading={loading}>
-        <SaveForm
-          disableEdit={false}
-          name={userData.gameName}
-          newBackground="#4C7DC0"
-          onClick={onShowIcons}
-          setUserData={setUserData}
-        />
-        <div style={styles.formHolder}>
-          <SaveTextInfoForm
-            key={userData.backupDelay}
+      <HighlightProblemFrom isProblem={hasError}>
+        <Loading loading={isLoading}>
+          <SaveForm
             disableEdit={false}
-            savePath={userData.gamePath}
-            backupDelay={userData.backupDelay}
+            name={userData.gameName}
+            newBackground="#4C7DC0"
+            onClick={onShowIcons}
             setUserData={setUserData}
           />
-          <SelectTime backupDelay={userData.backupDelay} setUserData={setUserData} />
-        </div>
-        {showIcons && (
-          <ul
-            ref={scrollRef}
-            onWheel={handleWheel}
-            className="non-draggable"
-            style={styles.listBody}
-          >
-            {iconNames.map((iconName) => (
-              <li key={iconName} style={{ flexShrink: 0 }}>
-                <ButtonForm size={50} iconName={iconName} />{' '}
-                {/*добавишь функцию , если чел нажал на кнопку то получил имя желанной иконки  */}
-              </li>
-            ))}
-          </ul>
-        )}
-        <div style={styles.buttonsAlign}>
-          <ButtonHolder>
-            <ButtonForm size={50} iconName="save" onClick={onSave} />
-            <ButtonForm size={50} iconName="cancel" onClick={onCancel} />
-          </ButtonHolder>
-        </div>
-      </Loading>
+          <div style={styles.formHolder}>
+            <SaveTextInfoForm
+              key={userData.backupDelay}
+              disableEdit={false}
+              savePath={userData.gamePath}
+              backupDelay={userData.backupDelay}
+              setUserData={setUserData}
+            />
+            <SelectTime backupDelay={userData.backupDelay} setUserData={setUserData} />
+          </div>
+          {showIcons && (
+            <ul
+              ref={scrollRef}
+              onWheel={handleWheel}
+              className="non-draggable"
+              style={styles.listBody}
+            >
+              {iconNames.map((iconName) => (
+                <li key={iconName} style={{ flexShrink: 0 }}>
+                  <ButtonForm size={50} iconName={iconName} />{' '}
+                  {/*добавишь функцию , если чел нажал на кнопку то получил имя желанной иконки  */}
+                </li>
+              ))}
+            </ul>
+          )}
+          <div style={styles.buttonsAlign}>
+            <ButtonHolder>
+              <ButtonForm size={50} iconName="save" onClick={onSave} />
+              <ButtonForm size={50} iconName="cancel" onClick={onCancel} />
+            </ButtonHolder>
+          </div>
+        </Loading>
+      </HighlightProblemFrom>
     </div>
   )
 }

@@ -39,7 +39,7 @@ export class UserDataService {
       console.log(`Adding new entry for game: ${newDataJson.gameName}`)
       newUserData.unshift(newDataJson)
     }
-    return
+
     await driverSerivice.updateJsonFile(dataFileId, newUserData)
     // const newUserData = [
     //   {
@@ -53,6 +53,31 @@ export class UserDataService {
     //     backupDelay: '63200'
     //   }
     // ]
+  }
+
+  async deleteItem(gameName: string): Promise<void> {
+    if (!gameName || gameName.length === 0) {
+      console.log('Missing input data')
+      throw new Error('Missing input data')
+    }
+
+    try {
+      const folderId = await driverSerivice.backupFolderId(gameName)
+      if (folderId) {
+        await driverSerivice.deleteInDrive(folderId)
+      }
+      const dataFileId = await driverSerivice.getOrCreateDataFile()
+      const oldData = await driverSerivice.readJsonFile<UserDataEntry[]>(dataFileId)
+      const userData: UserDataEntry[] = [...(oldData ?? [])]
+
+      const newUserData = userData.filter((gameBackup) => gameBackup.gameName !== gameName)
+      await driverSerivice.updateJsonFile(dataFileId, newUserData)
+
+      //console.log(`FolderDeleted!`)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      throw new Error(`Failed to delete item ${gameName}: ${message}`)
+    }
   }
 }
 

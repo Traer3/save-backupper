@@ -19,7 +19,8 @@ const api = {
     ipcRenderer.invoke('upload-backup-to-google', folderPath, folderName),
   getLastItemInfo: (folderName: string) => ipcRenderer.invoke('get-last-item-info', folderName),
   readUserData: () => ipcRenderer.invoke('read-user-data'),
-  changeUserData: (newData: string) => ipcRenderer.invoke('change-user-data', newData)
+  changeUserData: (newData: string) => ipcRenderer.invoke('change-user-data', newData),
+  deleteUserDataItem: (gameName: string) => ipcRenderer.invoke('delete-user-data-item', gameName)
 }
 
 if (process.contextIsolated) {

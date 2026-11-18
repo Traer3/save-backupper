@@ -5,9 +5,14 @@ import SaveTextInfoForm from './SaveTextInfoForm'
 type SaveInfoFormProps = {
   savePath?: string
   backupDelay?: string // потом ебануть timestamp
+  onDelete?: () => void
 }
 
-const SaveInfoForm = ({ savePath, backupDelay }: SaveInfoFormProps): React.JSX.Element => {
+const SaveInfoForm = ({
+  savePath,
+  backupDelay,
+  onDelete
+}: SaveInfoFormProps): React.JSX.Element => {
   return (
     <div style={styles.mainBody}>
       <SaveTextInfoForm disableEdit={true} savePath={savePath} backupDelay={backupDelay} />
@@ -15,7 +20,7 @@ const SaveInfoForm = ({ savePath, backupDelay }: SaveInfoFormProps): React.JSX.E
         <ButtonHolder>
           <ButtonForm size={30} iconName="start" />
           <ButtonForm size={30} iconName="archive" />
-          <ButtonForm size={30} iconName="emptyTrash" />
+          <ButtonForm size={30} iconName="emptyTrash" onClick={() => onDelete?.()} />
         </ButtonHolder>
       </div>
     </div>

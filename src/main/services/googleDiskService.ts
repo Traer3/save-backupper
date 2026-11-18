@@ -108,6 +108,23 @@ export class DriverService {
     return createResponse.data.id
   }
 
+  async backupFolderId(folderName: string): Promise<string> {
+    const driver = await this.getDriverClient()
+    const mainFolderId = await this.getOrCreateAppFolder()
+    const searchResponse = await driver.files.list({
+      q: `'${mainFolderId}' in parents and name = '${folderName}' and trashed = false`,
+      fields: 'files(id, name)',
+      spaces: 'drive'
+    })
+    const files = searchResponse.data.files
+    if (files && files.length > 0 && files[0].id) {
+      //console.log(`Found existing ${this.FOLDER_NAME}: ${files[0].id}`)
+      return files[0].id
+    } else {
+      throw new Error(`Cant find folder: ${folderName}`)
+    }
+  }
+
   async updateJsonFile<T>(fileId: string, data: T): Promise<void> {
     const driver = await this.getDriverClient()
     const jsonContent = JSON.stringify(data, null, 2)

@@ -16,6 +16,7 @@ export interface CustomAPI {
   getLastItemInfo: <T = unknown>(folderName: string) => Promise<T>
   readUserData: <T = unknown>() => Promise<T>
   changeUserData: <T = unknown>(newData: string) => Promise<T>
+  deleteUserDataItem: <T = unknown>(gameName: string) => Promise<T>
 }
 
 declare global {

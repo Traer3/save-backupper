@@ -14,4 +14,8 @@ export function getInfoIps(): void {
   ipcMain.handle('change-user-data', async (_, newData: string) => {
     return await userDataService.changeUserData(newData)
   })
+
+  ipcMain.handle('delete-user-data-item', async (_, gameName: string) => {
+    return await userDataService.deleteItem(gameName)
+  })
 }

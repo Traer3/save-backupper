@@ -78,11 +78,26 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
     setShowExtra(!showExtra)
   }
 
+  const { mutate: deleteBackup, isPending: isDeleting } = useMutation({
+    mutationFn: async () => {
+      return await window.api.deleteUserDataItem(gameName)
+    },
+    onSuccess: async () => {
+      console.log(`Backup created successfuly for ${gameName}`)
+      await queryClient.invalidateQueries({
+        queryKey: ['userData']
+      })
+    },
+    onError: (err) => {
+      console.log('Err: ', err.message)
+    }
+  })
+
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
   const hasError = trigeredError.length > 0 || (!isBackingUp && !isLoading && secondsLeft === 0)
 
   return (
-    <Loading loading={isBackingUp || isLoading}>
+    <Loading loading={isBackingUp || isLoading || isDeleting}>
       <HighlightProblem isProblem={hasError} problem={trigeredError}>
         <>
           <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo} isProblem={hasError}>
@@ -93,7 +108,9 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
               onComplete={createBackup}
             />
           </SaveForm>
-          {showExtra && <SaveInfoForm savePath={savePath} backupDelay={backupDelay} />}
+          {showExtra && (
+            <SaveInfoForm savePath={savePath} backupDelay={backupDelay} onDelete={deleteBackup} />
+          )}
         </>
       </HighlightProblem>
     </Loading>
