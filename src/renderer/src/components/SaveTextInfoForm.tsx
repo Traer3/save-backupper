@@ -16,7 +16,6 @@ export default function SaveTextInfoForm({
   savePath,
   backupDelay,
   disableEdit,
-  //setSavePath,
   setUserData
 }: SaveTextInfoFormProps): React.JSX.Element {
   const [backupDelayInput, setBackupDelayInput] = useState<string>(backupDelay || '0')
@@ -34,7 +33,7 @@ export default function SaveTextInfoForm({
 
     const validTime = timeFormat(debouncedBackupDelay)
 
-    setUserData((prev) => {
+    setUserData((prev) => { // как эту залупу покрыть задержкой
       if (prev.backupDelay === validTime) return prev
       return {
         ...prev,
