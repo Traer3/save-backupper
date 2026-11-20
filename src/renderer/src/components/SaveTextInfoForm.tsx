@@ -19,6 +19,7 @@ export default function SaveTextInfoForm({
   setUserData
 }: SaveTextInfoFormProps): React.JSX.Element {
   const [backupDelayInput, setBackupDelayInput] = useState<string>(backupDelay || '0')
+
   const debouncedBackupDelay = useDebounce<string>(backupDelayInput, 500)
 
   const timeFormat = (value: string): string => {
@@ -30,10 +31,10 @@ export default function SaveTextInfoForm({
   useEffect(() => {
     if (disableEdit || !setUserData) return
     if (debouncedBackupDelay.trim() === '' || isNaN(Number(debouncedBackupDelay))) return
-
+    // console.log("backupDelay: ", backupDelay)
     const validTime = timeFormat(debouncedBackupDelay)
-
-    setUserData((prev) => { // как эту залупу покрыть задержкой
+    // console.log("validTime: ", validTime)
+    setUserData((prev) => {
       if (prev.backupDelay === validTime) return prev
       return {
         ...prev,
@@ -45,6 +46,7 @@ export default function SaveTextInfoForm({
   const handleBackupDelayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setBackupDelayInput(e.target.value)
   }
+
   const handleBlur = (): void => {
     if (disableEdit) return
     const validTime = timeFormat(backupDelayInput)
