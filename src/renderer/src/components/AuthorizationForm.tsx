@@ -3,36 +3,37 @@ import mainIcon from '../../../../resources/mainIcon.png'
 import ButtonForm from './ButtonForm'
 import ButtonHolder from './ButtonHolder'
 import TextButton from './TextButton'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 interface AuthorizationFormProps {
   setAuth: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AuthorizationForm = ({ setAuth }: AuthorizationFormProps): React.JSX.Element => {
+  const { data: isTokenValid } = useQuery({
+    queryKey: ['authToken'],
+    queryFn: async () => {
+      return await window.api.checkToken<boolean>()
+    }
+  })
+
   useEffect(() => {
-    const init = async (): Promise<void> => {
-      const isSuccess = await window.api.checkToken<boolean>()
-      setAuth(isSuccess)
+    if (typeof isTokenValid === 'boolean') {
+      setAuth(isTokenValid)
     }
-    init()
-  }, [setAuth])
+  }, [isTokenValid, setAuth])
 
-  const toggleAuth = async (): Promise<void> => {
-    const isLoged = await logIn()
-    if (isLoged) {
+  const { mutate: toggleAuth } = useMutation({
+    mutationFn: async () => {
+      await window.api.tryLogin<boolean>()
+    },
+    onSuccess: async () => {
       setAuth(true)
+    },
+    onError: (err) => {
+      console.log(`Error in logIn: `, err.message)
     }
-  }
-
-  const logIn = async (): Promise<boolean> => {
-    try {
-      const isSuccess = await window.api.tryLogin<boolean>()
-      return Boolean(isSuccess)
-    } catch (err) {
-      console.log(`Error in logIn: `, err)
-      return false
-    }
-  }
+  })
 
   return (
     <div style={styles.mainBody}>

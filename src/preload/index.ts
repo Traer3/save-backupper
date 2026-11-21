@@ -5,22 +5,24 @@ const api = {
   tryLogin: () => ipcRenderer.invoke('try-login'),
   logout: () => ipcRenderer.invoke('logout'),
   checkToken: () => ipcRenderer.invoke('checkToken'),
-  createFolder: () => ipcRenderer.invoke('try-create-folder'),
-  uploadFile: (fileName: string) => ipcRenderer.invoke('uploadFile', fileName),
-  deleteMainFolder: () => ipcRenderer.invoke('filesInMainFolder'),
+  // createFolder: () => ipcRenderer.invoke('try-create-folder'),
+  // uploadFile: (fileName: string) => ipcRenderer.invoke('uploadFile', fileName),
+  deleteMainFolder: () => ipcRenderer.invoke('deleteMainFolder'),
   // filesInMainFolder: () => ipcRenderer.invoke('filesInMainFolder'),
   // textFile: (textInfo: string) => ipcRenderer.invoke('textFile', textInfo),
-  getFolderInfo: (folderPath: string) => ipcRenderer.invoke('get-folder-info', folderPath),
-  archive: (sourceDir: string, outZipPath: string) =>
-    ipcRenderer.invoke('archive', sourceDir, outZipPath),
-  extractArchive: (sourceDir: string, outZipPath: string) =>
-    ipcRenderer.invoke('extract_archive', sourceDir, outZipPath),
+  // getFolderInfo: (folderPath: string) => ipcRenderer.invoke('get-folder-info', folderPath),
+  // archive: (sourceDir: string, outZipPath: string) =>
+  //   ipcRenderer.invoke('archive', sourceDir, outZipPath),
+  // extractArchive: (sourceDir: string, outZipPath: string) =>
+  //   ipcRenderer.invoke('extract_archive', sourceDir, outZipPath),
   backupUploader: (folderPath: string, folderName: string) =>
     ipcRenderer.invoke('upload-backup-to-google', folderPath, folderName),
   getLastItemInfo: (folderName: string) => ipcRenderer.invoke('get-last-item-info', folderName),
   readUserData: () => ipcRenderer.invoke('read-user-data'),
   changeUserData: (newData: string) => ipcRenderer.invoke('change-user-data', newData),
-  deleteUserDataItem: (gameName: string) => ipcRenderer.invoke('delete-user-data-item', gameName)
+  deleteUserDataItem: (gameName: string) => ipcRenderer.invoke('delete-user-data-item', gameName),
+  selectBackupFolder: () => ipcRenderer.invoke('select-backup-folder'),
+  openFolder: (folderPath: string) => ipcRenderer.invoke('open-folder', folderPath)
 }
 
 if (process.contextIsolated) {

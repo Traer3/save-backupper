@@ -7,6 +7,7 @@ import { driverSeriviceIps } from './ips/driverSeriviceIps'
 import { filesServiceIps } from './ips/filesServiceIps'
 import { backupUploaderIps } from './ips/backupUploaderIps'
 import { getInfoIps } from './ips/getInfoIps'
+import { toolsIps } from './ips/toolsIps'
 
 function createWindow(): void {
   // Create the browser window.
@@ -67,6 +68,8 @@ app.whenReady().then(() => {
   getInfoIps()
 
   backupUploaderIps()
+
+  toolsIps()
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

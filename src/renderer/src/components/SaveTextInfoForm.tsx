@@ -4,6 +4,7 @@ import { UserData } from './NewBackup'
 import { getFormattedData } from './FormatTime'
 import InputForm from './InputForm'
 import { useDebounce } from '@renderer/useDebounce'
+import { useMutation } from '@tanstack/react-query'
 
 interface SaveTextInfoFormProps {
   savePath?: string
@@ -31,16 +32,20 @@ export default function SaveTextInfoForm({
   useEffect(() => {
     if (disableEdit || !setUserData) return
     if (debouncedBackupDelay.trim() === '' || isNaN(Number(debouncedBackupDelay))) return
-    // console.log("backupDelay: ", backupDelay)
+
     const validTime = timeFormat(debouncedBackupDelay)
-    // console.log("validTime: ", validTime)
-    setUserData((prev) => {
-      if (prev.backupDelay === validTime) return prev
-      return {
-        ...prev,
-        backupDelay: validTime
-      }
-    })
+
+    const timeoutId = setTimeout(() => {
+      //хуйня не стабильная, если задержка ввода совпадет с таймером активации то setUserData запишит старое значение , выкенет из инпута . Это работа на 23 день , запись называется "«задача» Исправить баг с инпутом "
+      setUserData((prev) => {
+        if (prev.backupDelay === validTime) return prev
+        return {
+          ...prev,
+          backupDelay: validTime
+        }
+      })
+    }, 1000)
+    return () => clearTimeout(timeoutId)
   }, [debouncedBackupDelay, disableEdit, setUserData])
 
   const handleBackupDelayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -67,6 +72,24 @@ export default function SaveTextInfoForm({
     }))
   }
 
+  const { mutate: selectBackupPath } = useMutation({
+    mutationFn: async () => {
+      if (disableEdit && savePath) {
+        await window.api.openFolder(savePath)
+      } else {
+        const result = await window.api.selectBackupFolder<string | null>()
+        if (!result || result.length === 0 || !setUserData) return
+        setUserData((prev) => ({
+          ...prev,
+          gamePath: result
+        }))
+      }
+    },
+    onError: (err) => {
+      console.log(`Error in selectBackupPath: `, err.message)
+    }
+  })
+
   return (
     <>
       <div title={savePath} style={styles.folderPosition}>
@@ -75,7 +98,7 @@ export default function SaveTextInfoForm({
           placeholder={savePath}
           onChange={(e) => changePath(e.target.value)}
         />
-        <ButtonForm size={25} iconName="folder" />
+        <ButtonForm size={25} iconName="folder" onClick={selectBackupPath} />
       </div>
       {disableEdit ? (
         <InputForm

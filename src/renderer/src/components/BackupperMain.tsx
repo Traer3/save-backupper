@@ -22,8 +22,6 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
     }
   })
 
-  //console.log('userData:', userData)
-
   const onNewBackup = (): void => {
     setNetBackup(!newBackup)
   }
@@ -32,11 +30,8 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
     setEnableSettings(!enableSettings)
   }
 
-  const createFolder = async (): Promise<void> => {
-    //await window.api.createFolder()
-    //await window.api.uploadFile('test.txt')
-    //await window.api.deleteMainFolder()
-    //await window.api.filesInMainFolder()
+  const archiveAllBackup = async (): Promise<void> => {
+    //await window.api. архивировать все
   }
 
   return (
@@ -47,7 +42,7 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
             <ButtonForm size={35} iconName="start" />
             <ButtonForm size={35} iconName="terminal" />
             <ButtonForm size={35} iconName="addCircle" onClick={onNewBackup} />
-            <ButtonForm size={35} iconName="archive" onClick={createFolder} />
+            <ButtonForm size={35} iconName="archive" onClick={archiveAllBackup} />
             <ButtonForm size={35} iconName="settings" onClick={toggleSettings} />
           </ButtonHolder>
         </div>

@@ -1,4 +1,6 @@
 import TextButton from './TextButton'
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface SettingsProps {
   setAuth: React.Dispatch<React.SetStateAction<boolean>>
@@ -6,16 +8,39 @@ interface SettingsProps {
 }
 
 const Settings = ({ setAuth, setEnableSettings }: SettingsProps): React.JSX.Element => {
-  const deleteAllBackups = async (): Promise<void> => {
-    await window.api.deleteMainFolder()
-    console.log('Deleted')
-  }
-  const logout = async (): Promise<void> => {
-    await window.api.logout()
-    console.log('TokenDeleted')
-    setAuth(false)
-    setEnableSettings(false)
-  }
+  const queryClient = useQueryClient()
+  const { mutate: deleteAllBackups } = useMutation({
+    mutationFn: async () => {
+      await window.api.deleteMainFolder()
+    },
+    onSuccess: async () => {
+      console.log('Deleted')
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['userData'] }),
+        queryClient.invalidateQueries({ queryKey: ['authToken'] })
+      ])
+      //нужно добавить онулирование userData
+    },
+    onError: (err) => {
+      console.log(`Error in deleteAllBackups: `, err.message)
+      // setTrigeredError(err.message)
+    }
+  })
+
+  const { mutate: logout } = useMutation({
+    mutationFn: async () => {
+      await window.api.logout()
+    },
+    onSuccess: async () => {
+      console.log('TokenDeleted')
+      setAuth(false)
+      setEnableSettings(false)
+    },
+    onError: (err) => {
+      console.log(`Error in logout: `, err.message)
+      // setTrigeredError(err.message)
+    }
+  })
   return (
     <div style={styles.mainBody}>
       <TextButton text="delete all current buckups" onClick={deleteAllBackups} />
