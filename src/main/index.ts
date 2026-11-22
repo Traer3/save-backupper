@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Tray, nativeImage, Menu } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -9,9 +9,64 @@ import { backupUploaderIps } from './ips/backupUploaderIps'
 import { getInfoIps } from './ips/getInfoIps'
 import { toolsIps } from './ips/toolsIps'
 
+let mainWindow: BrowserWindow | null = null
+let tray: Tray | null = null
+let isQuitting = false
+
+function showMainWindow(): void {
+  if (!mainWindow) {
+    createWindow()
+    return
+  }
+
+  if (mainWindow.isMinimizable()) {
+    mainWindow.restore()
+  }
+
+  mainWindow.show()
+  mainWindow.focus()
+}
+
+function createTray(): void {
+  if (tray) return
+
+  const trayImage = nativeImage.createFromPath(icon).resize({ width: 16, height: 16 })
+  tray = new Tray(trayImage)
+  tray.setToolTip('Save Backupper')
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Open',
+      click: () => showMainWindow()
+    },
+    { type: 'separator' },
+    {
+      label: 'Exit',
+      click: () => {
+        isQuitting = true
+        app.quit()
+      }
+    }
+  ])
+
+  tray.setContextMenu(contextMenu)
+
+  tray.on('click', () => {
+    if (!mainWindow) {
+      createWindow()
+      return
+    }
+    if (mainWindow.isVisible()) {
+      mainWindow.focus()
+    } else {
+      showMainWindow()
+    }
+  })
+}
+
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 350,
     height: 690,
     show: false,
@@ -32,21 +87,28 @@ function createWindow(): void {
     }
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+  mainWindow = win
+
+  win.on('ready-to-show', () => {
+    win.show()
   })
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  win.on('close', (event) => {
+    if (!isQuitting) {
+      event.preventDefault()
+      win.hide()
+    }
+  })
+
+  win.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+    win.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    win.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
 
@@ -58,17 +120,14 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   authorizationIps()
-
   driverSeriviceIps()
-
   filesServiceIps()
 
   createWindow()
+  createTray()
 
   getInfoIps()
-
   backupUploaderIps()
-
   toolsIps()
 
   app.on('activate', function () {
@@ -76,14 +135,8 @@ app.whenReady().then(() => {
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+app.on('before-quit', () => {
+  isQuitting = true
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+app.on('window-all-closed', () => {})
