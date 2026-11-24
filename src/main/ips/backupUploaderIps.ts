@@ -6,6 +6,9 @@ export function backupUploaderIps(): void {
     await backupUploaderService.uploadBackup(folderPath, folderName)
   })
 
+  ipcMain.handle('archive-all', async () => {
+    await backupUploaderService.archiveAll()
+  })
   //   ipcMain.handle('get-folder-info', async (_, folderPath: string) => {
   //     await filesService.main(folderPath)
   //   })

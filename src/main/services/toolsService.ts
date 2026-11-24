@@ -1,6 +1,6 @@
 import { app } from 'electron'
 import { readFile, writeFile, access, rm, readdir } from 'fs/promises'
-import { join } from 'path'
+import path, { join } from 'path'
 
 export class ToolsService {
   getFilePath(fileName: string): string {
@@ -46,6 +46,15 @@ export class ToolsService {
       console.error(`❌Error writing: ${err}`)
       return false
     }
+  }
+
+  //бля я потом создам нормальную запись файла , ща пиздец ебет
+  async writeFile2(filePath: string, data: unknown): Promise<void> {
+    const cleanPath = path.normalize(filePath)
+    const contetn = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
+    await writeFile(cleanPath, contetn, 'utf-8').catch((err) => {
+      throw new Error(`Error in writeFile2: ${err}`)
+    })
   }
 
   async exists(fileName: string, silent: boolean = true): Promise<boolean | null> {

@@ -39,7 +39,7 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
   }
 
   const offlineArchiveAllBackup = async (): Promise<void> => {
-    //await window.api. архивировать все
+    await window.api.archiveAll()
   }
 
   return (

@@ -15,7 +15,8 @@ const api = {
   selectBackupFolder: () => ipcRenderer.invoke('select-backup-folder'),
   openFolder: (folderPath: string) => ipcRenderer.invoke('open-folder', folderPath),
   getAutoLaunch: () => ipcRenderer.invoke('auto-launch:get'),
-  setAutoLaunch: (enabled: boolean) => ipcRenderer.invoke('auto-launch:set', enabled)
+  setAutoLaunch: (enabled: boolean) => ipcRenderer.invoke('auto-launch:set', enabled),
+  archiveAll: () => ipcRenderer.invoke('archive-all')
 }
 
 if (process.contextIsolated) {

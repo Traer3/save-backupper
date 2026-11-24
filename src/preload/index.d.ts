@@ -14,6 +14,7 @@ export interface CustomAPI {
   openFolder: <T = unknown>(folderPath: string) => Promise<T>
   getAutoLaunch: <T = unknown>() => Promise<T>
   setAutoLaunch: <T = unknown>(enabled: boolean) => Promise<T>
+  archiveAll: <T = unknown>() => Promise<T>
 }
 
 declare global {

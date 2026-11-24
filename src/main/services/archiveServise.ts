@@ -1,4 +1,5 @@
 import AdmZip from 'adm-zip'
+import path from 'path'
 
 export class ArchiveServise {
   async createZipArchive(sourceDir: string, outZipPath: string): Promise<void> {
@@ -12,6 +13,14 @@ export class ArchiveServise {
     const zip = new AdmZip(zipPath)
     zip.extractAllTo(targetDir, true)
     console.log(`Archive successfully extracting in ${targetDir}`)
+  }
+
+  async createZipFromFiles(filePaths: string[], outZipPath: string): Promise<void> {
+    const zip = new AdmZip()
+    for (const filePath of filePaths) {
+      zip.addLocalFile(filePath, '', path.basename(filePath))
+    }
+    await zip.writeZipPromise(outZipPath)
   }
 }
 
