@@ -8,6 +8,7 @@ import Settings from './Settings'
 import { useQuery } from '@tanstack/react-query'
 import Loading from './Loading'
 import WarningWindow from './WarningWindow'
+import Terminal from './Terminal'
 
 interface BackupperMainProps {
   setAuthorized: React.Dispatch<React.SetStateAction<boolean>>
@@ -15,6 +16,7 @@ interface BackupperMainProps {
 const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element => {
   const [newBackup, setNetBackup] = useState(false)
   const [enableSettings, setEnableSettings] = useState(false)
+  const [enableTerminal, setEnableTerminal] = useState(false)
   const [backupAll, setBackupAll] = useState(false)
   const [archiveAll, setArchiveAll] = useState(false)
   // const waringName =  'backup all to drive'
@@ -24,6 +26,15 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
     queryFn: async () => {
       return await window.api.readUserData<UserData[]>()
     }
+  })
+
+  const { data: lastZip } = useQuery({
+    queryKey: ['zipEraser'],
+    queryFn: async (): Promise<string | null> => {
+      return await window.api.zipEraserService()
+    },
+    staleTime: 1000 * 60 * 60 * 12,
+    refetchInterval: 1000 * 60 * 60 * 12
   })
 
   const onNewBackup = (): void => {
@@ -55,7 +66,11 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
                 setBackupAll(!backupAll)
               }}
             />
-            <ButtonForm size={35} iconName="terminal" />
+            <ButtonForm
+              size={35}
+              iconName="terminal"
+              onClick={() => setEnableTerminal(!enableTerminal)}
+            />
             <ButtonForm size={35} iconName="addCircle" onClick={onNewBackup} />
             <ButtonForm
               size={35}
@@ -86,6 +101,8 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
         {enableSettings && (
           <Settings setAuth={setAuthorized} setEnableSettings={setEnableSettings} />
         )}
+
+        {enableTerminal && <Terminal lastZip={lastZip} />}
         {newBackup ? (
           <NewBackup />
         ) : (

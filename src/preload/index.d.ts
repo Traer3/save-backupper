@@ -15,6 +15,7 @@ export interface CustomAPI {
   getAutoLaunch: <T = unknown>() => Promise<T>
   setAutoLaunch: <T = unknown>(enabled: boolean) => Promise<T>
   archiveAll: <T = unknown>() => Promise<T>
+  zipEraserService: <T = unknown>() => Promise<T>
 }
 
 declare global {

@@ -16,7 +16,8 @@ const api = {
   openFolder: (folderPath: string) => ipcRenderer.invoke('open-folder', folderPath),
   getAutoLaunch: () => ipcRenderer.invoke('auto-launch:get'),
   setAutoLaunch: (enabled: boolean) => ipcRenderer.invoke('auto-launch:set', enabled),
-  archiveAll: () => ipcRenderer.invoke('archive-all')
+  archiveAll: () => ipcRenderer.invoke('archive-all'),
+  zipEraserService: () => ipcRenderer.invoke('zip-eraser-servise')
 }
 
 if (process.contextIsolated) {
