@@ -1,7 +1,7 @@
 import AdmZip from 'adm-zip'
 import path from 'path'
 
-export class ArchiveServise {
+export class ArchiveService {
   async createZipArchive(sourceDir: string, outZipPath: string): Promise<void> {
     const zip = new AdmZip()
     zip.addLocalFolder(sourceDir, '')
@@ -24,4 +24,4 @@ export class ArchiveServise {
   }
 }
 
-export const archiveServise = new ArchiveServise()
+export const archiveService = new ArchiveService()

@@ -2,7 +2,7 @@ import path from 'path'
 import { toolsService } from './toolsService'
 import os from 'os'
 
-export class ActiveServise {
+export class ActiveService {
   FOR_DELETION = ['.zip', `userData.json`]
   async zipEraser(): Promise<string> {
     const tempPath = os.tmpdir()
@@ -19,4 +19,4 @@ export class ActiveServise {
   }
 }
 
-export const activeServise = new ActiveServise()
+export const activeService = new ActiveService()

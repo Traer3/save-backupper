@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { getInfoService } from '../services/getInfoService'
-import { userDataService } from '../services/userDataServise'
-import { activeServise } from '../services/activeServise'
+import { userDataService } from '../services/userDataService'
+import { activeService } from '../services/activeService'
 
 export function getInfoIps(): void {
   ipcMain.handle('get-last-item-info', async (_, folderName: string) => {
@@ -20,7 +20,7 @@ export function getInfoIps(): void {
     return await userDataService.deleteItem(gameName)
   })
 
-  ipcMain.handle('zip-eraser-servise', async () => {
-    return await activeServise.zipEraser()
+  ipcMain.handle('zip-eraser-service', async () => {
+    return await activeService.zipEraser()
   })
 }

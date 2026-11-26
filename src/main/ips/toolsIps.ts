@@ -1,6 +1,6 @@
 import { app, ipcMain } from 'electron'
 import { toolsService } from '../services/toolsService'
-import { systemFoldresServise } from '../services/systemFoldresServise'
+import { systemFoldresService } from '../services/systemFoldresService'
 
 export function toolsIps(): void {
   ipcMain.handle('read-json', async (_, fileName: string) => {
@@ -9,11 +9,11 @@ export function toolsIps(): void {
   })
 
   ipcMain.handle('select-backup-folder', async () => {
-    return await systemFoldresServise.openSystemFolders()
+    return await systemFoldresService.openSystemFolders()
   })
 
   ipcMain.handle('open-folder', async (_, folderPath: string) => {
-    await systemFoldresServise.openFolder(folderPath)
+    await systemFoldresService.openFolder(folderPath)
   })
 
   ipcMain.handle('auto-launch:get', (): boolean => {

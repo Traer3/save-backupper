@@ -17,7 +17,7 @@ const api = {
   getAutoLaunch: () => ipcRenderer.invoke('auto-launch:get'),
   setAutoLaunch: (enabled: boolean) => ipcRenderer.invoke('auto-launch:set', enabled),
   archiveAll: () => ipcRenderer.invoke('archive-all'),
-  zipEraserService: () => ipcRenderer.invoke('zip-eraser-servise')
+  zipEraserService: () => ipcRenderer.invoke('zip-eraser-service')
 }
 
 if (process.contextIsolated) {

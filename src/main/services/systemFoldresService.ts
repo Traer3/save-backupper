@@ -30,4 +30,4 @@ export class SystemFolders {
   }
 }
 
-export const systemFoldresServise = new SystemFolders()
+export const systemFoldresService = new SystemFolders()

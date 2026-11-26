@@ -14,12 +14,12 @@ export function backupUploaderIps(): void {
   //   })
 
   //   ipcMain.handle('archive', async (_, sourceDir: string, outZipPath: string) => {
-  //     const FileInfo = await archiveServise.createZipArchive(sourceDir, outZipPath)
+  //     const FileInfo = await archiveService.createZipArchive(sourceDir, outZipPath)
   //     return FileInfo
   //   })
 
   //   ipcMain.handle('extract_archive', async (_, sourceDir: string, outZipPath: string) => {
-  //     const FileInfo = await archiveServise.extractZipArchive(sourceDir, outZipPath)
+  //     const FileInfo = await archiveService.extractZipArchive(sourceDir, outZipPath)
   //     return FileInfo
   //   })
 }

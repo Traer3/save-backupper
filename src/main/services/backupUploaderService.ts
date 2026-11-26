@@ -1,9 +1,9 @@
-import { archiveServise } from './archiveServise'
+import { archiveService } from './archiveService'
 import { driverSerivice } from './googleDiskService'
 import { toolsService } from './toolsService'
 import os from 'os'
 import path from 'path'
-import { UserDataEntry, userDataService } from './userDataServise'
+import { UserDataEntry, userDataService } from './userDataService'
 import { app } from 'electron'
 
 interface TempBackupPaths {
@@ -40,7 +40,7 @@ export class BackupUploaderService {
     }
     const { tempZipPath, archiveFileName, cleanPath } = paths
     try {
-      await archiveServise.createZipArchive(cleanPath, tempZipPath)
+      await archiveService.createZipArchive(cleanPath, tempZipPath)
       const mainFolderId = await driverSerivice.getOrCreateAppFolder()
       const backupFolderId = await driverSerivice.createSubFolder(mainFolderId, folderName)
       await this.deleteOldBackups(backupFolderId)
@@ -70,7 +70,7 @@ export class BackupUploaderService {
       if (!current) throw new Error(`Empty backup path`)
       try {
         const { tempZipPath, archiveFileName, cleanPath } = current
-        await archiveServise.createZipArchive(cleanPath, tempZipPath)
+        await archiveService.createZipArchive(cleanPath, tempZipPath)
         tempPathArray.push(tempZipPath)
         console.log(`Created archive for: ${archiveFileName}`)
       } catch (err) {
@@ -87,7 +87,7 @@ export class BackupUploaderService {
       const cleanDesktopPath = path.join(app.getPath('desktop'), 'BIGzip.zip')
       //console.log('cleanDesktopPath: ',cleanDesktopPath)
       console.log(`Creating BIG zip`)
-      await archiveServise.createZipFromFiles(tempPathArray, cleanDesktopPath)
+      await archiveService.createZipFromFiles(tempPathArray, cleanDesktopPath)
       console.log(`Big zip created in ${cleanDesktopPath}`)
     } catch (err) {
       console.log(`Error while creating BIGzip: ${err}`)
