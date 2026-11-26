@@ -5,10 +5,11 @@ import NewBackup, { UserData } from './NewBackup'
 import SaveFile from './SaveFile'
 import SaveListForm from './SaveListForm'
 import Settings from './Settings'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import Loading from './Loading'
 import WarningWindow from './WarningWindow'
 import Terminal from './Terminal'
+import HighlightProblemFrom from './HighlightProblem'
 
 interface BackupperMainProps {
   setAuthorized: React.Dispatch<React.SetStateAction<boolean>>
@@ -19,14 +20,17 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
   const [enableTerminal, setEnableTerminal] = useState(false)
   const [backupAll, setBackupAll] = useState(false)
   const [archiveAll, setArchiveAll] = useState(false)
-  // const waringName =  'backup all to drive'
-
-  const { data: userData, isLoading } = useQuery({
+  const [problem, setProblem] = useState<boolean>(false)
+  const [editedUserData, setEditedUserData] = useState<UserData[] | null>(null)
+  const queryClient = useQueryClient()
+  const { data: userBackups, isLoading } = useQuery({
     queryKey: ['userData'],
     queryFn: async () => {
       return await window.api.readUserData<UserData[]>()
     }
   })
+
+  const userData = editedUserData ?? userBackups ?? []
 
   const { data: lastZip } = useQuery({
     queryKey: ['zipEraser'],
@@ -45,8 +49,24 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
     setEnableSettings(!enableSettings)
   }
 
+  //полная хуйня , но работает , потом исправлю
   const archiveAllBackup = async (): Promise<void> => {
-    //await window.api. архивировать все
+    setProblem(true)
+    setEditedUserData((prev) => {
+      const baseList = prev ?? userBackups ?? []
+      return baseList.map((backup) => ({
+        ...backup,
+        backupDelay: '0'
+      }))
+    })
+
+    setTimeout(async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['userData']
+      })
+      setProblem(false)
+      setEditedUserData(null)
+    }, 25000)
   }
 
   const offlineArchiveAllBackup = async (): Promise<void> => {
@@ -106,17 +126,19 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
         {newBackup ? (
           <NewBackup />
         ) : (
-          <SaveListForm>
-            {userData?.map((obj) => (
-              <div key={obj.gamePath}>
-                <SaveFile
-                  gameName={obj.gameName}
-                  savePath={obj.gamePath}
-                  backupDelay={obj.backupDelay}
-                />
-              </div>
-            ))}
-          </SaveListForm>
+          <HighlightProblemFrom problem="Archiving all backups..." isProblem={problem}>
+            <SaveListForm>
+              {userData?.map((obj) => (
+                <div key={obj.gamePath}>
+                  <SaveFile
+                    gameName={obj.gameName}
+                    savePath={obj.gamePath}
+                    backupDelay={obj.backupDelay}
+                  />
+                </div>
+              ))}
+            </SaveListForm>
+          </HighlightProblemFrom>
         )}
       </div>
     </Loading>
