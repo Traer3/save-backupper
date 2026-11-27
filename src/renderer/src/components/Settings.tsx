@@ -1,4 +1,4 @@
-import TextButton from './TextButton'
+import TextButton from '../ui/TextButton'
 import { useMutation } from '@tanstack/react-query'
 import { useQueryClient, useQuery } from '@tanstack/react-query'
 

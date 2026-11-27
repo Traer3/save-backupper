@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import SaveForm from './SaveForm'
 import SaveInfoForm from './SaveInfoForm'
-import TimerForm from './TimerForm'
+import TimerForm from '../TimeComponents/TimerForm'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import Loading from './Loading'
-import HighlightProblem from './HighlightProblem'
+import Loading from '../../ui/Loading'
+import HighlightProblem from '../../ui/HighlightProblem'
 import { useQueryClient } from '@tanstack/react-query'
 
 interface SaveFileProps {

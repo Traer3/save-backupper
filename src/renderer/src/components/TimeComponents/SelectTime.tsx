@@ -1,6 +1,6 @@
-import ButtonForm from './ButtonForm'
-import ButtonHolder from './ButtonHolder'
-import { UserData } from './NewBackup'
+import ButtonForm from '../../ui/ButtonForm'
+import ButtonHolder from '../../ui/ButtonHolder'
+import { UserData } from './../NewBackup'
 
 export interface SelectTimeProps {
   backupDelay: string

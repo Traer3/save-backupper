@@ -1,5 +1,5 @@
 // import { useQueryClient, useQuery } from '@tanstack/react-query'
-import TextButton from './TextButton'
+import TextButton from '../ui/TextButton'
 
 interface TerminalProps {
   lastZip?: string | null

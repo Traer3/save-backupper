@@ -1,5 +1,5 @@
-import ButtonForm from './ButtonForm'
-import { UserData } from './NewBackup'
+import ButtonForm from '../../ui/ButtonForm'
+import { UserData } from '../NewBackup'
 
 interface SaveFormProps {
   name?: string

@@ -1,5 +1,5 @@
-import ButtonForm from './ButtonForm'
-import ButtonHolder from './ButtonHolder'
+import ButtonForm from '../../ui/ButtonForm'
+import ButtonHolder from '../../ui/ButtonHolder'
 import SaveTextInfoForm from './SaveTextInfoForm'
 
 type SaveInfoFormProps = {

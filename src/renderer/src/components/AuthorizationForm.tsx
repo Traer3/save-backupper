@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import mainIcon from '../../../../resources/mainIcon.png'
-import ButtonForm from './ButtonForm'
-import ButtonHolder from './ButtonHolder'
-import TextButton from './TextButton'
+import ButtonForm from '../ui/ButtonForm'
+import ButtonHolder from '../ui/ButtonHolder'
+import TextButton from '../ui/TextButton'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 interface AuthorizationFormProps {

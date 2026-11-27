@@ -36,3 +36,57 @@ input::placeholder {
     color: #ebf8e78c;
     opacity: 1;
 }
+
+.holo-text {
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: 0.04em;
+
+    background: linear-gradient(
+        115deg,
+        #4c7dc9 0%,
+        #97debf 24%,
+        #ebf8e7 48%,
+        #4c7dc0 74%,
+        #4852ab 88%,
+        #4c7dc0 100%
+    );
+    /* background: linear-gradient(
+        115deg,
+        #7afcff 0%,
+        #feff9c 18%,
+        #ff7eb9 36%,
+        #9d7bff 54%,
+        #5efce8 72%,
+        #ff7eb9 90%,
+        #7afcff 100%
+    ); */
+    background-size: 360% auto;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    filter: drop-shadow(0 0 8px rgba(151,222,191,0.16));
+
+    animation: holo-shift 16s ease-in-out infinite;
+}
+
+@keyframes holo-shift{
+    0%{
+        background-position: 0% 50%;
+    }
+    50%{
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .holo-text {
+        animation: none;
+        background-position: 35% 50%;
+    }
+}

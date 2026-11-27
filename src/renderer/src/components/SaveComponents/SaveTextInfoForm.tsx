@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import ButtonForm from './ButtonForm'
-import { UserData } from './NewBackup'
-import { getFormattedData } from './FormatTime'
-import InputForm from './InputForm'
+import ButtonForm from '../../ui/ButtonForm'
+import { UserData } from '../NewBackup'
+import { getFormattedData } from '../TimeComponents/FormatTime'
+import InputForm from '../../ui/InputForm'
 import { useDebounce } from '@renderer/useDebounce'
 import { useMutation } from '@tanstack/react-query'
 

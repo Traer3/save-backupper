@@ -1,15 +1,15 @@
 import { useState } from 'react'
-import ButtonForm from './ButtonForm'
-import ButtonHolder from './ButtonHolder'
+import ButtonForm from '../ui/ButtonForm'
+import ButtonHolder from '../ui/ButtonHolder'
 import NewBackup, { UserData } from './NewBackup'
-import SaveFile from './SaveFile'
-import SaveListForm from './SaveListForm'
+import SaveFile from './SaveComponents/SaveFile'
+import SaveListForm from './SaveComponents/SaveListForm'
 import Settings from './Settings'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import Loading from './Loading'
-import WarningWindow from './WarningWindow'
+import Loading from '../ui/Loading'
+import WarningWindow from '../ui/WarningWindow'
 import Terminal from './Terminal'
-import HighlightProblemFrom from './HighlightProblem'
+import HighlightProblemFrom from '../ui/HighlightProblem'
 
 interface BackupperMainProps {
   setAuthorized: React.Dispatch<React.SetStateAction<boolean>>

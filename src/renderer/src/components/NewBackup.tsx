@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react'
-import ButtonForm from './ButtonForm'
-import SaveForm from './SaveForm'
-import SaveTextInfoForm from './SaveTextInfoForm'
-import ButtonHolder from './ButtonHolder'
-import Loading from './Loading'
-import SelectTime from './SelectTime'
+import ButtonForm from '../ui/ButtonForm'
+import SaveForm from './SaveComponents/SaveForm'
+import SaveTextInfoForm from './SaveComponents/SaveTextInfoForm'
+import ButtonHolder from '../ui/ButtonHolder'
+import Loading from '../ui/Loading'
+import SelectTime from '../components/TimeComponents/SelectTime'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMutation } from '@tanstack/react-query'
-import HighlightProblemFrom from './HighlightProblem'
+import HighlightProblemFrom from '../ui/HighlightProblem'
 
 export interface UserData {
   gameName: string
@@ -20,7 +20,7 @@ const NewBackup = (): React.JSX.Element => {
   const [userData, setUserData] = useState<UserData>({
     gameName: 'DarkSouls II',
     gamePath: 'C:\\Users\\traer\\AppData\\Roaming\\DarkSoulsII',
-    backupDelay: '43200' //0
+    backupDelay: '43200'
   })
   const [showIcons, setShowIcons] = useState(false)
   const scrollRef = useRef<HTMLUListElement>(null)
@@ -67,7 +67,7 @@ const NewBackup = (): React.JSX.Element => {
 
   const writeInfo = async (): Promise<void> => {
     if (userData.backupDelay === '0') throw new Error(`Im not that fast`)
-    const newFormat = JSON.stringify(userData) // добавить сюда валидацию времени инпута минимум 300
+    const newFormat = JSON.stringify(userData)
     await window.api.changeUserData(newFormat)
   }
 

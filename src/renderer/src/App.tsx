@@ -18,7 +18,9 @@ function App(): React.JSX.Element {
   return (
     <div style={{ width: '100vw', height: '100vh', backgroundColor: '#2E346E' }}>
       <div className="draggable" style={styles.aplicationName}>
-        <span style={{ fontSize: '12px', color: 'red' }}>Zalupa</span>
+        <span className="holo-text" style={{ fontSize: '12px' }}>
+          Backupper
+        </span>
       </div>
       <QueryClientProvider client={queryClient}>
         {authorized ? (
