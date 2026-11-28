@@ -93,11 +93,23 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
     }
   })
 
+  const { mutate: offlineArchive, isPending: isArchiving } = useMutation({
+    mutationFn: async () => {
+      return await window.api.createOfflineArchive(savePath, gameName)
+    },
+    onSuccess: async () => {
+      console.log(`Archive created successfuly for ${gameName}`)
+    },
+    onError: (err) => {
+      console.log('Err: ', err.message)
+    }
+  })
+
   if (isError) return <div>Error: {String(error)}</div> //заменить эту хуету
   const hasError = trigeredError.length > 0 || (!isBackingUp && !isLoading && secondsLeft === 0)
 
   return (
-    <Loading loading={isBackingUp || isLoading || isDeleting}>
+    <Loading loading={isBackingUp || isLoading || isDeleting || isArchiving}>
       <HighlightProblem isProblem={hasError} problem={trigeredError}>
         <>
           <SaveForm disableEdit={true} name={gameName} onClick={showExtraInfo} isProblem={hasError}>
@@ -109,7 +121,13 @@ const SaveFile = ({ gameName, savePath, backupDelay }: SaveFileProps): React.JSX
             />
           </SaveForm>
           {showExtra && (
-            <SaveInfoForm savePath={savePath} backupDelay={backupDelay} onDelete={deleteBackup} />
+            <SaveInfoForm
+              savePath={savePath}
+              backupDelay={backupDelay}
+              onDelete={deleteBackup}
+              createBackup={createBackup}
+              offlineArchive={offlineArchive}
+            />
           )}
         </>
       </HighlightProblem>

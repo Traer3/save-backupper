@@ -16,4 +16,8 @@ export function filesServiceIps(): void {
     const FileInfo = await archiveService.extractZipArchive(sourceDir, outZipPath)
     return FileInfo
   })
+
+  ipcMain.handle('create_offline_archive', async (_, sourceDir: string, gameName: string) => {
+    await archiveService.createOfflineZip(sourceDir, gameName)
+  })
 }

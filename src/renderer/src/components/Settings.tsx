@@ -4,10 +4,10 @@ import { useQueryClient, useQuery } from '@tanstack/react-query'
 
 interface SettingsProps {
   setAuth: React.Dispatch<React.SetStateAction<boolean>>
-  setEnableSettings: React.Dispatch<React.SetStateAction<boolean>>
+  toggleOverlay?: () => void
 }
 
-const Settings = ({ setAuth, setEnableSettings }: SettingsProps): React.JSX.Element => {
+const Settings = ({ setAuth, toggleOverlay }: SettingsProps): React.JSX.Element => {
   const queryClient = useQueryClient()
   const { data: autoStartState = false } = useQuery({
     queryKey: ['autoStartState'],
@@ -41,7 +41,7 @@ const Settings = ({ setAuth, setEnableSettings }: SettingsProps): React.JSX.Elem
     onSuccess: async () => {
       console.log('TokenDeleted')
       setAuth(false)
-      setEnableSettings(false)
+      toggleOverlay?.()
     },
     onError: (err) => {
       console.log(`Error in logout: `, err.message)

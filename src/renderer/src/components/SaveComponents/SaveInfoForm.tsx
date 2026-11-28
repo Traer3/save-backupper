@@ -6,20 +6,29 @@ type SaveInfoFormProps = {
   savePath?: string
   backupDelay?: string // потом ебануть timestamp
   onDelete?: () => void
+  createBackup?: () => void
+  offlineArchive?: () => void
 }
 
 const SaveInfoForm = ({
   savePath,
   backupDelay,
-  onDelete
+  onDelete,
+  createBackup,
+  offlineArchive
 }: SaveInfoFormProps): React.JSX.Element => {
   return (
     <div style={styles.mainBody}>
       <SaveTextInfoForm disableEdit={true} savePath={savePath} backupDelay={backupDelay} />
       <div>
         <ButtonHolder>
-          <ButtonForm size={30} iconName="start" />
-          <ButtonForm size={30} iconName="archive" />
+          <ButtonForm size={30} iconName="start" title="Start backup NOW" onClick={createBackup} />
+          <ButtonForm
+            size={30}
+            iconName="archive"
+            title="Create offline backup"
+            onClick={offlineArchive}
+          />
           <ButtonForm size={30} iconName="emptyTrash" onClick={() => onDelete?.()} />
         </ButtonHolder>
       </div>

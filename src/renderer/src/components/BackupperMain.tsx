@@ -5,7 +5,7 @@ import NewBackup, { UserData } from './NewBackup'
 import SaveFile from './SaveComponents/SaveFile'
 import SaveListForm from './SaveComponents/SaveListForm'
 import Settings from './Settings'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import Loading from '../ui/Loading'
 import WarningWindow from '../ui/WarningWindow'
 import Terminal from './Terminal'
@@ -14,14 +14,13 @@ import HighlightProblemFrom from '../ui/HighlightProblem'
 interface BackupperMainProps {
   setAuthorized: React.Dispatch<React.SetStateAction<boolean>>
 }
+type ActiveOverlay = 'backupAll' | 'archiveAll' | 'settings' | 'terminal' | null
 const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element => {
+  const [activeOverlay, setActiveOverlay] = useState<ActiveOverlay>(null)
   const [newBackup, setNetBackup] = useState(false)
-  const [enableSettings, setEnableSettings] = useState(false)
-  const [enableTerminal, setEnableTerminal] = useState(false)
-  const [backupAll, setBackupAll] = useState(false)
-  const [archiveAll, setArchiveAll] = useState(false)
   const [problem, setProblem] = useState<boolean>(false)
   const [editedUserData, setEditedUserData] = useState<UserData[] | null>(null)
+
   const queryClient = useQueryClient()
   const { data: userBackups, isLoading } = useQuery({
     queryKey: ['userData'],
@@ -29,7 +28,6 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
       return await window.api.readUserData<UserData[]>()
     }
   })
-
   const userData = editedUserData ?? userBackups ?? []
 
   const { data: lastZip } = useQuery({
@@ -40,14 +38,6 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
     staleTime: 1000 * 60 * 60 * 12,
     refetchInterval: 1000 * 60 * 60 * 12
   })
-
-  const onNewBackup = (): void => {
-    setNetBackup(!newBackup)
-  }
-
-  const toggleSettings = (): void => {
-    setEnableSettings(!enableSettings)
-  }
 
   //полная хуйня , но работает , потом исправлю
   const archiveAllBackup = async (): Promise<void> => {
@@ -69,12 +59,51 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
     }, 25000)
   }
 
-  const offlineArchiveAllBackup = async (): Promise<void> => {
-    await window.api.archiveAll()
+  const { mutate: offlineArchiveAllBackup, isPending: isArchiving } = useMutation({
+    mutationFn: async () => {
+      await window.api.archiveAll()
+    },
+    onSuccess: async () => {
+      setActiveOverlay(null)
+    },
+    onError: (err) => {
+      console.log(`Error in offlineArchiveAllBackup: `, err.message)
+    }
+  })
+
+  const toggleOverlay = (overlay: Exclude<ActiveOverlay, null>): void => {
+    setActiveOverlay((prev) => (prev === overlay ? null : overlay))
+  }
+
+  const renderActiveOverlay = (): React.JSX.Element | null => {
+    switch (activeOverlay) {
+      case 'backupAll':
+        return (
+          <WarningWindow
+            onClick={archiveAllBackup}
+            textWarning="Backup all file to Google Drive"
+            onClose={() => setActiveOverlay(null)}
+          />
+        )
+      case 'archiveAll':
+        return (
+          <WarningWindow
+            onClick={offlineArchiveAllBackup}
+            textWarning="Archive all file offline"
+            onClose={() => setActiveOverlay(null)}
+            isLoading={isArchiving}
+          />
+        )
+      case 'settings':
+        return <Settings setAuth={setAuthorized} toggleOverlay={() => setActiveOverlay(null)} />
+      case 'terminal':
+        return <Terminal lastZip={lastZip} />
+      default:
+        return null
+    }
   }
 
   return (
-    // закидывать сюда два состояния загрузки по активации
     <Loading loading={isLoading} loadingStyle={true}>
       <div className="non-draggable" style={styles.mainBody}>
         <div>
@@ -83,46 +112,24 @@ const BackupperMain = ({ setAuthorized }: BackupperMainProps): React.JSX.Element
               size={35}
               iconName="start"
               onClick={() => {
-                setBackupAll(!backupAll)
+                toggleOverlay('backupAll')
               }}
             />
-            <ButtonForm
-              size={35}
-              iconName="terminal"
-              onClick={() => setEnableTerminal(!enableTerminal)}
-            />
-            <ButtonForm size={35} iconName="addCircle" onClick={onNewBackup} />
+            <ButtonForm size={35} iconName="terminal" onClick={() => toggleOverlay('terminal')} />
+            <ButtonForm size={35} iconName="addCircle" onClick={() => setNetBackup(!newBackup)} />
             <ButtonForm
               size={35}
               iconName="archive"
               onClick={() => {
-                setArchiveAll(!archiveAll)
+                toggleOverlay('archiveAll')
               }}
             />
-            <ButtonForm size={35} iconName="settings" onClick={toggleSettings} />
+            <ButtonForm size={35} iconName="settings" onClick={() => toggleOverlay('settings')} />
           </ButtonHolder>
         </div>
 
-        {backupAll && (
-          <WarningWindow
-            onClick={archiveAllBackup}
-            textWarning="Backup all file to Google Drive"
-            setState={setBackupAll}
-          />
-        )}
-        {archiveAll && (
-          <WarningWindow
-            onClick={offlineArchiveAllBackup}
-            textWarning="Archive all file offline"
-            setState={setArchiveAll}
-          />
-        )}
+        {renderActiveOverlay()}
 
-        {enableSettings && (
-          <Settings setAuth={setAuthorized} setEnableSettings={setEnableSettings} />
-        )}
-
-        {enableTerminal && <Terminal lastZip={lastZip} />}
         {newBackup ? (
           <NewBackup />
         ) : (

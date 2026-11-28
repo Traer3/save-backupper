@@ -1,5 +1,6 @@
 import AdmZip from 'adm-zip'
 import path from 'path'
+import { app } from 'electron'
 
 export class ArchiveService {
   async createZipArchive(sourceDir: string, outZipPath: string): Promise<void> {
@@ -21,6 +22,12 @@ export class ArchiveService {
       zip.addLocalFile(filePath, '', path.basename(filePath))
     }
     await zip.writeZipPromise(outZipPath)
+  }
+
+  async createOfflineZip(sourceDir: string, gameName: string): Promise<void> {
+    const cleanDesktopPath = path.join(app.getPath('desktop'), `${gameName}.zip`)
+    const cleanPath = path.normalize(sourceDir)
+    await this.createZipArchive(cleanPath, cleanDesktopPath)
   }
 }
 

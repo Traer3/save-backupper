@@ -26,6 +26,7 @@ type ButtonFormProps = {
   iconName?: string ;
   onClick?: () => void
   onRightClick?: () => void
+  title?: string
   //onRiht
 }
 
@@ -53,7 +54,7 @@ const icons = {
   default: DefaultIcon
 }
 
-function ButtonForm({ size, onClick, iconName, onRightClick }: ButtonFormProps): React.JSX.Element {
+function ButtonForm({ size, onClick, iconName, onRightClick, title }: ButtonFormProps): React.JSX.Element {
   const IconName = iconName ? iconName :"default";
   const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>): void => {
     if(e.button === 0){
@@ -66,6 +67,7 @@ function ButtonForm({ size, onClick, iconName, onRightClick }: ButtonFormProps):
   }
   return (
     <button
+      title={title}
       style={{
         width:`clamp(24px, 15vw, ${size}px)`, //height: size,
         height:`clamp(24px, 15vw, ${size}px)`,//width: size,

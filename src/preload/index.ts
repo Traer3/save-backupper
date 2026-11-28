@@ -17,7 +17,9 @@ const api = {
   getAutoLaunch: () => ipcRenderer.invoke('auto-launch:get'),
   setAutoLaunch: (enabled: boolean) => ipcRenderer.invoke('auto-launch:set', enabled),
   archiveAll: () => ipcRenderer.invoke('archive-all'),
-  zipEraserService: () => ipcRenderer.invoke('zip-eraser-service')
+  zipEraserService: () => ipcRenderer.invoke('zip-eraser-service'),
+  createOfflineArchive: (folderPath: string, gameName: string) =>
+    ipcRenderer.invoke('create_offline_archive', folderPath, gameName)
 }
 
 if (process.contextIsolated) {

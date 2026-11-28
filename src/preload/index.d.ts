@@ -16,6 +16,7 @@ export interface CustomAPI {
   setAutoLaunch: <T = unknown>(enabled: boolean) => Promise<T>
   archiveAll: <T = unknown>() => Promise<T>
   zipEraserService: <T = unknown>() => Promise<T>
+  createOfflineArchive: <T = unknown>(folderPath: string, gameName: string) => Promise<T>
 }
 
 declare global {
